@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "888285203701",
+    "project_id": "parktulua-37480",
+    "storage_bucket": "parktulua-37480.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888285203701:android:e9b6771dabb87e431609bc",
+        "android_client_info": {
+          "package_name": "com.univalle.parqueaderoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "888285203701-v26tl6ugl8sirr5qfs0rfiggnaghsrll.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.univalle.parqueaderoapp",
+            "certificate_hash": "14b2c7c2e4c9b25cc388f7f3dc70729b90c1bdaa"
+          }
+        },
+        {
+          "client_id": "888285203701-2gh4l69mauuca89s2q8045ejrii0vrsu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiIjtJlSmadP9Si-PBXWjshdr5ezYhlaM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "888285203701-2gh4l69mauuca89s2q8045ejrii0vrsu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
