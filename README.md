@@ -79,18 +79,18 @@ parqueaderoapp/
 | Lenguaje | Kotlin |
 | Interfaz | Jetpack Compose |
 | Versión mínima de Android | API 24 |
-| Paquete base | El que aparece en la **primera línea** de `MainActivity.kt` (empieza con `package ...`) |
+| Paquete base | `com.univalle.parqueaderoapp` |
 
-**Todos usamos exactamente el mismo paquete base.** No se cambia por cuenta propia. En el resto de este documento se le llama **[paquete base]**.
+**Todos usamos exactamente el mismo paquete base.** No se cambia por cuenta propia.
 
 ---
 
 ## 5. Estructura del código
 
-Todo el código vive dentro de `app/src/main/java/[paquete base]/`.
+Todo el código vive dentro de `app/src/main/java/com/univalle/parqueaderoapp/`.
 
 ```
-[paquete base]/
+com.univalle.parqueaderoapp/
 │
 ├── MainActivity.kt                 ← puerta de entrada de la app
 ├── ParqueaderoApp.kt               ← clase principal de la aplicación
@@ -152,10 +152,10 @@ Si rompes esta regla, el proyecto se vuelve un sancocho. Si dudas, pregunta.
 ### 6.1 Crear los paquetes (carpetas de código)
 
 1. En el panel izquierdo, abre la vista **Android** y despliega `kotlin+java`.
-2. Clic derecho sobre el paquete base (el que **no** dice `androidTest` ni `test`).
+2. Clic derecho sobre `com.univalle.parqueaderoapp` (el que **no** dice `androidTest` ni `test`).
 3. Elige **New → Package**.
 4. Escribe el nombre completo, por ejemplo `core.di`, y pulsa Enter.
-5. Repite con cada uno de la lista, **siempre haciendo clic derecho sobre el paquete base** para que queden todos al mismo nivel:
+5. Repite con cada uno de la lista, **siempre haciendo clic derecho sobre `com.univalle.parqueaderoapp`** para que queden todos al mismo nivel:
 
 ```
 core.di
