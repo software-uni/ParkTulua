@@ -39,6 +39,8 @@ fun LoginCard(
     modifier: Modifier = Modifier,
     mostrarFormulario: Boolean,
     email: String,
+    emailError: String? = null,
+    onValidarEmail: () -> Unit = {},
     contrasena: String,
     onEmailChange: (String) -> Unit,
     onContrasenaChange: (String) -> Unit,
@@ -67,6 +69,8 @@ fun LoginCard(
                 FormularioCorreo(
                     email = email,
                     onEmailChange = onEmailChange,
+                    emailError = emailError,
+                    onValidarEmail = onValidarEmail,
                     contrasena = contrasena,
                     onContrasenaChange = onContrasenaChange,
                     onRecuperarPasswordClick = onRecuperarPasswordClick,

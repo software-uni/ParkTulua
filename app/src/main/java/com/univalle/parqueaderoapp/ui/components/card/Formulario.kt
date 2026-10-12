@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -33,11 +34,16 @@ import com.univalle.parqueaderoapp.ui.componet.botones.botones.BotonPrincipal
 
 @Composable
 fun FormularioCorreo(
+    //correo
     email: String,
     onEmailChange: (String) -> Unit,
+    emailError: String? = null,
+    onValidarEmail: () -> Unit = {},
+    //contraseña
     contrasena: String,
     onContrasenaChange: (String) -> Unit,
     onRecuperarPasswordClick: () -> Unit,
+
     onEntrarClick: () -> Unit
 ){
     // Estado local para alternar el ojito de la contraseña
@@ -52,11 +58,21 @@ fun FormularioCorreo(
             onValueChange = onEmailChange,
             placeholder = "ejemplo@gmail.com",
             iconoIzquierdo = Icons.Default.Email,
+            esError = emailError !=null,
+            mensajeError = emailError ?: "",
             esCompletado = correoEsValido,
+
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
-            )
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { focusState ->
+                    if (!focusState.isFocused) {
+                        onValidarEmail()
+                    }
+                }
 
         )
         Spacer(modifier = Modifier.height(8.dp))

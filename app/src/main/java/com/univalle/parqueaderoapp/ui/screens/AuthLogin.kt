@@ -122,6 +122,8 @@ fun LoginScreen(
                     contrasena = viewModel.contrasena,
                     onEmailChange = {viewModel.onEmailChange(it)},
                     onContrasenaChange = {viewModel.onContrasenaChange(it)},
+                    emailError = viewModel.emailError,
+                    onValidarEmail = { viewModel.validarEmailEnvivo() },
                     onMostrarFormularioClick = {mostrarFormulario = true},
                     onEntrarClick = {
                             viewModel.login()

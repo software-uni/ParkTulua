@@ -1,9 +1,12 @@
 package com.univalle.parqueaderoapp.ui.components.card
 
+import android.view.Surface
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -11,43 +14,57 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.Color
+import co.parktulua.core.designsystem.Acento
 import co.parktulua.core.designsystem.Neutro600
+import co.parktulua.core.designsystem.Neutro900
 import com.univalle.parqueaderoapp.ui.components.inputs.CampoTextoParqueadero
 import com.univalle.parqueaderoapp.ui.componet.botones.botones.BotonPrincipal
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun FormularioRegistro(
     nombre: String,
-    onNombreChange :(String)-> Unit,
+    onNombreChange: (String) -> Unit,
 
-    email : String,
-    onEmailChange : (String)-> Unit,
+    email: String,
+    onEmailChange: (String) -> Unit,
     emailError: String? = null,
     onValidarEmail: () -> Unit = {},
 
     contrasenaError: String? = null,
     onValidarContrasena: () -> Unit = {},
-    contrasena : String,
-    onContrasenaChange : (String)-> Unit,
+    contrasena: String,
+    onContrasenaChange: (String) -> Unit,
     confirmarContrasena: String,
-    onConfirmarContrasenaChange : (String)-> Unit,
+    onConfirmarContrasenaChange: (String) -> Unit,
 
-    onRegistraClilck: ()-> Unit
-){
+    // --- NUEVO: Estado para los términos ---
+    aceptaTerminos: Boolean,
+    onAceptaTerminosChange: (Boolean) -> Unit,
+
+    onRegistraClilck: () -> Unit
+) {
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmarPasswordVisible by remember { mutableStateOf(false) }
 
@@ -56,7 +73,23 @@ fun FormularioRegistro(
 
     Column(modifier = Modifier.fillMaxWidth()) {
 
-        //campo del nombre
+        // --- 1. TÍTULOS ---
+        Text(
+            text = "Crea tu cuenta",
+            fontWeight = FontWeight.Bold,
+            fontSize = 24.sp,
+            color = Neutro900
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "Reserva en segundos y guarda tu historial de pagos. No pedimos la placa para registrarte.",
+            fontSize = 14.sp,
+            color = Neutro600,
+            lineHeight = 20.sp
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // --- 2. CAMPO NOMBRE ---
         CampoTextoParqueadero(
             label = "Nombre completo",
             value = nombre,
@@ -67,7 +100,7 @@ fun FormularioRegistro(
         )
         Spacer(modifier = Modifier.height(14.dp))
 
-        // --- 2. CAMPO CORREO ---
+        // --- 3. CAMPO CORREO ---
         CampoTextoParqueadero(
             label = "Correo electrónico",
             value = email,
@@ -84,14 +117,14 @@ fun FormularioRegistro(
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { focusState ->
-                    // Cuando el usuario sale del input de correo
                     if (!focusState.isFocused) {
-                        onValidarEmail() // Dispara la validación
+                        onValidarEmail()
                     }
                 }
         )
         Spacer(modifier = Modifier.height(14.dp))
 
+        // --- 4. CAMPO CONTRASEÑA ---
         CampoTextoParqueadero(
             label = "Contraseña",
             value = contrasena,
@@ -121,6 +154,7 @@ fun FormularioRegistro(
         )
         Spacer(modifier = Modifier.height(14.dp))
 
+        // --- 5. CAMPO CONFIRMAR CONTRASEÑA ---
         CampoTextoParqueadero(
             label = "Confirmar contraseña",
             value = confirmarContrasena,
@@ -128,7 +162,7 @@ fun FormularioRegistro(
             placeholder = "Contr@seña Segura",
             iconoIzquierdo = Icons.Default.Lock,
             esCompletado = lasContrasenasCoinciden,
-            visualTransformation = if(confirmarPasswordVisible) VisualTransformation.None else  PasswordVisualTransformation(),
+            visualTransformation = if (confirmarPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
@@ -139,10 +173,31 @@ fun FormularioRegistro(
                     Icon(imageVector = icono, contentDescription = "Ver contraseña", tint = Neutro600)
                 }
             }
-
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
+        // --- 6. CHECKBOX TÉRMINOS Y CONDICIONES ---
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+        ) {
+            Checkbox(
+                checked = aceptaTerminos,
+                onCheckedChange = onAceptaTerminosChange,
+                colors = CheckboxDefaults.colors(
+                    checkedColor = Acento,
+                    checkmarkColor = Color.White
+                )
+            )
+            Text(
+                text = "Acepto los términos de uso y la política de tratamiento de datos.",
+                fontSize = 12.sp,
+                color = Neutro600,
+                lineHeight = 16.sp
+            )
+        }
+
+        // --- 7. BOTÓN PRINCIPAL ---
         BotonPrincipal(
             texto = "Crear cuenta",
             onClick = onRegistraClilck
