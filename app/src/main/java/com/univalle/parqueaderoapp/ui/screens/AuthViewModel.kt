@@ -27,6 +27,8 @@ class AuthViewModel(
         private set
     var contrasenaError by mutableStateOf<String?>(null)
         private set
+    var mensajeRecuperacion by mutableStateOf<String?>(null)
+        private set
 
     fun onEmailChange(nuevoEmail: String) { email = nuevoEmail }
     fun onContrasenaChange(nuevaContrasena: String) { contrasena = nuevaContrasena }
@@ -133,6 +135,26 @@ class AuthViewModel(
             }
         }
     }
+
+    //recuperar contraseña
+    fun recuperarContrasena(){
+        if(email.isBlank()){
+            errorMensaje = "Por favor, ingresa tu correo electrónico en el campo de texto."
+            return
+        }
+        viewModelScope.launch {
+            errorMensaje = null
+            mensajeRecuperacion = null
+            val resultado = repository.recuperarPassword(email)
+            resultado.onSuccess {
+                mensajeRecuperacion = "Correo enviado. Por favor revisa tu bandeja de entrada."
+            }.onFailure { excepcion ->
+                errorMensaje = excepcion.localizedMessage ?: "Error al enviar el correo"
+            }
+        }
+    }
+
+
 }
 
 // Factory para poder crear el ViewModel pasándole el repositorio

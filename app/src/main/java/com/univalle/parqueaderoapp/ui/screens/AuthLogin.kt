@@ -1,6 +1,7 @@
 package com.univalle.parqueaderoapp.ui.screens
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,6 +61,18 @@ fun LoginScreen(
     val coroutineScope = rememberCoroutineScope()
 
     var mostrarFormulario by remember { mutableStateOf(false) }
+
+    LaunchedEffect(viewModel.mensajeRecuperacion) {
+        viewModel.mensajeRecuperacion?.let { mensaje ->
+            Toast.makeText(context, mensaje, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    LaunchedEffect(viewModel.errorMensaje) {
+        viewModel.errorMensaje?.let { error ->
+            Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+        }
+    }
 
     val composition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.intro_parqueadero)
@@ -113,7 +127,7 @@ fun LoginScreen(
                             viewModel.login()
                     },
                     onRecuperarPasswordClick = {
-
+                        viewModel.recuperarContrasena()
                     },
                     onIniciarSesionClick = onIniciarSesionClick,
                     onGoogleClick = {

@@ -6,4 +6,6 @@ interface AuthRepository {
 
     suspend fun iniciarSesionInvitado() : Result<Boolean>
     suspend fun registrarConCorreo(email: String, contrasena: String, nombre: String): Result<Boolean>
+
+    suspend fun recuperarPassword(email: String): Result<Unit>
 }

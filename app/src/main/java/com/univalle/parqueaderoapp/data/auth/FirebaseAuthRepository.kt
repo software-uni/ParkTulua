@@ -56,4 +56,13 @@ class FirebaseAuthRepository(
             Result.failure(e)
         }
     }
+
+    override suspend fun recuperarPassword(email: String): Result<Unit>{
+        return try {
+            auth.sendPasswordResetEmail(email).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
