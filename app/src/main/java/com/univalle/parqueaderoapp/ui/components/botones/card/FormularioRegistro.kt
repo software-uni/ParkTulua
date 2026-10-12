@@ -29,17 +29,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.focus.onFocusChanged
 
 @Composable
 fun FormularioRegistro(
     nombre: String,
     onNombreChange :(String)-> Unit,
+
     email : String,
     onEmailChange : (String)-> Unit,
+    emailError: String? = null,
+    onValidarEmail: () -> Unit = {},
+
+    contrasenaError: String? = null,
+    onValidarContrasena: () -> Unit = {},
     contrasena : String,
     onContrasenaChange : (String)-> Unit,
     confirmarContrasena: String,
     onConfirmarContrasenaChange : (String)-> Unit,
+
     onRegistraClilck: ()-> Unit
 ){
     var passwordVisible by remember { mutableStateOf(false) }
@@ -68,23 +76,44 @@ fun FormularioRegistro(
             onValueChange = onEmailChange,
             placeholder = "nombre@parqueadero.com",
             iconoIzquierdo = Icons.Default.Email,
+            esError = emailError != null,
+            mensajeError = emailError ?: "",
             esCompletado = correoEsValido,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
-            )
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { focusState ->
+                    // Cuando el usuario sale del input de correo
+                    if (!focusState.isFocused) {
+                        onValidarEmail() // Dispara la validación
+                    }
+                }
         )
+        Spacer(modifier = Modifier.height(14.dp))
+
         CampoTextoParqueadero(
             label = "Contraseña",
             value = contrasena,
             onValueChange = onContrasenaChange,
             placeholder = "Contr@seña Segura",
             iconoIzquierdo = Icons.Default.Lock,
+            esError = contrasenaError != null,
+            mensajeError = contrasenaError ?: "",
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Next
             ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { focusState ->
+                    if (!focusState.isFocused) {
+                        onValidarContrasena()
+                    }
+                },
             iconoDerecho = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     val icono = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
@@ -93,6 +122,7 @@ fun FormularioRegistro(
             }
         )
         Spacer(modifier = Modifier.height(14.dp))
+
         CampoTextoParqueadero(
             label = "Confirmar contraseña",
             value = confirmarContrasena,

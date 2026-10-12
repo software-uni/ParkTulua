@@ -23,6 +23,10 @@ class AuthViewModel(
         private set
     var errorMensaje by mutableStateOf<String?>(null)
         private set
+    var emailError by mutableStateOf<String?>(null)
+        private set
+    var contrasenaError by mutableStateOf<String?>(null)
+        private set
 
     fun onEmailChange(nuevoEmail: String) { email = nuevoEmail }
     fun onContrasenaChange(nuevaContrasena: String) { contrasena = nuevaContrasena }
@@ -57,18 +61,59 @@ class AuthViewModel(
         }
     }
 
+    fun validarEmailEnvivo(){
+        val patronCorreo = android.util.Patterns.EMAIL_ADDRESS
+        if(email.isBlank()){
+            emailError = null
+        }
+        else if (!patronCorreo.matcher(email).matches()){
+            emailError = "Por favor ingrese un correo válido"
+        } else{
+            emailError = null
+        }
+    }
+    fun validarContrasenaEnVivo() {
+        val patronContrasena = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!_]).{8,}$".toRegex()
+        if (contrasena.isBlank()) {
+            contrasenaError = null
+        } else if (!contrasena.matches(patronContrasena)) {
+            contrasenaError = "Mínimo 8 caracteres, una mayúscula, un número y un símbolo."
+        } else {
+            contrasenaError = null
+        }
+    }
+
     fun registrarUsuario(){
-        if(nombre.isBlank() || email.isBlank() || contrasena.isBlank()){
+        //validamos que los campos no esten vacios
+        if(nombre.isBlank() || email.isBlank() || contrasena.isBlank() || confirmarContrasena.isBlank()){
             errorMensaje = "Por favor completa todos los campos."
             return
         }
+        //validamos formatos de correo valido
+        val patronCorreo = android.util.Patterns.EMAIL_ADDRESS
+        if (!patronCorreo.matcher(email).matches()) {
+            emailError = "Por favor ingresa un correo electrónico válido."
+            android.util.Log.d("AuthDebug", ">>> El correo falló la validación: $email")
+            return
+        } else{
+            emailError = null
+        }
+        // 3. Validar criterios de contraseña segura
+        // Mínimo 8 caracteres, al menos 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial
+        val patronContrasena = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!_]).{8,}$".toRegex()
+        if (!contrasena.matches(patronContrasena)) {
+            errorMensaje = "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo especial."
+            return
+        }
+
+        //validamos que las contraseñas coincidan
         if (contrasena != confirmarContrasena) {
             errorMensaje = "Las contraseñas no coinciden."
             return
         }
         viewModelScope.launch {
             errorMensaje = null
-            val resultado = repository.registrarConCorreo(email, contrasena, nombre) // Dependiendo de cómo tengas tu repositorio
+            val resultado = repository.registrarConCorreo(email, contrasena, nombre)
             resultado.onSuccess {
                 errorMensaje = "¡Cuenta creada con éxito!"
             }.onFailure { excepcion ->

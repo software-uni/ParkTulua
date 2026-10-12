@@ -70,12 +70,20 @@ fun RegistroScreen(
                     FormularioRegistro(
                         nombre = viewModel.nombre,
                         onNombreChange = { viewModel.onNombreChange(it) },
+
                         email = viewModel.email,
                         onEmailChange = { viewModel.onEmailChange(it) },
+                        emailError = viewModel.emailError,
+                        onValidarEmail = {viewModel.validarEmailEnvivo()},
+
                         contrasena = viewModel.contrasena,
                         onContrasenaChange = { viewModel.onContrasenaChange(it) },
+                        onValidarContrasena = { viewModel.validarContrasenaEnVivo() },
+                        contrasenaError = viewModel.contrasenaError,
+
                         confirmarContrasena = viewModel.confirmarContrasena,
                         onConfirmarContrasenaChange = { viewModel.onConfirmarContrasenaChange(it) },
+
                         onRegistraClilck = {
                             viewModel.registrarUsuario()
                         }
