@@ -52,9 +52,13 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation("androidx.compose.material:material-icons-extended")
     // Firebase: la BoM mantiene todas las versiones compatibles entre sí
     implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.airbnb.android:lottie-compose:6.5.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
 // Para el botón "Continuar con Google"
     implementation("androidx.credentials:credentials:1.3.0")

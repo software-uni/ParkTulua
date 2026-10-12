@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">parqueadero app</string>
+    <string name="app_name">ParkTulua</string>
+    <string name="login_titulo">Bienvenido a Park Tuluá</string>
+    <string name="login_subtitulo">Encuentra cupo cerca, reserva y llega sin dar vueltas.</string>
+    <string name="login_crear">Crear cuenta</string>
+    <string name="boton_iniciar_sesion">Iniciar sesión</string>
+    <string name="boton_google">Continuar con Google</string>
+    <string name="boton_crear_cuenta">Crear cuenta</string>
+    <string name="login_invitado">Ingresar como invitado  →</string>
+    <string name="marca_nombre">Park Tuluá</string>
+    <string name="marca_lema">Tu cupo, sin vueltas</string>
 </resources>
