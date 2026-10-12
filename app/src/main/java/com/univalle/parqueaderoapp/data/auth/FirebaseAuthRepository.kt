@@ -3,6 +3,7 @@ package com.univalle.parqueaderoapp.data.auth
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 
 class FirebaseAuthRepository(
@@ -23,6 +24,17 @@ class FirebaseAuthRepository(
             auth.signInWithCredential(credential).await()
             Result.success(true)
         } catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun iniciarSesionInvitado(): Result<Boolean> {
+        return try {
+            if (auth.currentUser == null) auth.signInAnonymously().await()
+            Result.success(true)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }

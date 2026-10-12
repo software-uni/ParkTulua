@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -23,6 +22,7 @@ import co.parktulua.core.designsystem.Neutro0
 import co.parktulua.core.designsystem.Neutro600
 import co.parktulua.core.designsystem.Neutro900
 import com.univalle.parqueaderoapp.R
+import com.univalle.parqueaderoapp.ui.components.botones.card.FormularioCorreo
 import com.univalle.parqueaderoapp.ui.componet.botones.botones.BotonGoogle
 import com.univalle.parqueaderoapp.ui.componet.botones.botones.BotonPrincipal
 import com.univalle.parqueaderoapp.ui.componet.botones.botones.BotonSecundario
@@ -30,18 +30,6 @@ import com.univalle.parqueaderoapp.ui.theme.EnlaceLogin
 import com.univalle.parqueaderoapp.ui.theme.SubtituloLogin
 import com.univalle.parqueaderoapp.ui.theme.TituloLogin
 
-/**
- * Hoja de bienvenida del login. Medidas tomadas del Figma "Conductor 3.0 / Login":
- * - Alto de la hoja: 528 dp, pegada al borde inferior
- * - Esquinas superiores: 32 dp
- * - Margen lateral: 24 dp, margen superior: 40 dp
- * - Separación encabezado -> botones: 32 dp
- * - Separación entre botones: 14 dp
- *
- * El Figma NO tiene campos de correo ni contraseña en esta hoja, por eso
- * ya no se reciben aquí. Cuando exista la pantalla de "Iniciar sesión"
- * con campos, ahí se usan email/contrasena del ViewModel.
- */
 @Composable
 fun LoginCard(
     onIniciarSesionClick: () -> Unit,
@@ -49,6 +37,14 @@ fun LoginCard(
     onCrearCuentaClick: () -> Unit,
     onInvitadoClick: () -> Unit,
     modifier: Modifier = Modifier,
+    mostrarFormulario: Boolean,
+    email: String,
+    contrasena: String,
+    onEmailChange: (String) -> Unit,
+    onContrasenaChange: (String) -> Unit,
+    onMostrarFormularioClick: () -> Unit, // Reemplaza al antiguo onIniciarSesionClick
+    onEntrarClick: () -> Unit,            // Cuando toca "Entrar" en el formulario
+    onRecuperarPasswordClick: () -> Unit,
 ) {
     Surface(
         modifier = modifier
@@ -66,8 +62,23 @@ fun LoginCard(
         ) {
             LoginEncabezado()
             Spacer(Modifier.height(32.dp))
-            LoginAcciones(onIniciarSesionClick, onGoogleClick, onCrearCuentaClick)
-            // 22 dp + 10 dp de relleno del enlace = los 32 dp que marca el Figma
+
+            if(mostrarFormulario){
+                FormularioCorreo(
+                    email = email,
+                    onEmailChange = onEmailChange,
+                    contrasena = contrasena,
+                    onContrasenaChange = onContrasenaChange,
+                    onRecuperarPasswordClick = onRecuperarPasswordClick,
+                    onEntrarClick = onEntrarClick
+                )
+            }else {
+                LoginAcciones(
+                    onIniciarSesionClick = onMostrarFormularioClick,
+                    onGoogleClick = onGoogleClick,
+                    onCrearCuentaClick = onCrearCuentaClick
+                )
+            }
             Spacer(Modifier.height(22.dp))
             LoginInvitado(onClick = onInvitadoClick)
         }
@@ -97,7 +108,10 @@ private fun LoginAcciones(
     onCrearCuentaClick: () -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-        BotonPrincipal(onClick = onIniciarSesionClick)
+        BotonPrincipal(
+            onClick = onIniciarSesionClick,
+            texto = stringResource(R.string.boton_iniciar_sesion)
+            )
         BotonGoogle(onClick = onGoogleClick)
         BotonSecundario(onClick = onCrearCuentaClick)
     }

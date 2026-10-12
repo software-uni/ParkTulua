@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.compose.    ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
@@ -41,6 +43,7 @@ import com.univalle.parqueaderoapp.ui.componet.botones.card.LoginCard
 import com.univalle.parqueaderoapp.ui.componet.logo.MarcaSplash
 import com.univalle.parqueaderoapp.ui.componet.logo.MarcaSuperior
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.setValue
 
 
 private val SUBIR_MARCA = 120.dp
@@ -54,6 +57,8 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+
+    var mostrarFormulario by remember { mutableStateOf(false) }
 
     val composition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.intro_parqueadero)
@@ -98,6 +103,18 @@ fun LoginScreen(
                 ) + expandVertically(animationSpec = tween(durationMillis = 450)) + fadeIn(),
             ) {
                 LoginCard(
+                    mostrarFormulario = mostrarFormulario,
+                    email = viewModel.email,
+                    contrasena = viewModel.contrasena,
+                    onEmailChange = {viewModel.onEmailChange(it)},
+                    onContrasenaChange = {viewModel.onContrasenaChange(it)},
+                    onMostrarFormularioClick = {mostrarFormulario = true},
+                    onEntrarClick = {
+                            viewModel.login()
+                    },
+                    onRecuperarPasswordClick = {
+
+                    },
                     onIniciarSesionClick = onIniciarSesionClick,
                     onGoogleClick = {
                         coroutineScope.launch {
@@ -128,7 +145,9 @@ fun LoginScreen(
                         }
                     },
                     onCrearCuentaClick = onCrearCuenta,
-                    onInvitadoClick = onIniciarInvitado,
+                    onInvitadoClick = {
+                        viewModel.loginInivitado()
+                    },
                 )
             }
         }

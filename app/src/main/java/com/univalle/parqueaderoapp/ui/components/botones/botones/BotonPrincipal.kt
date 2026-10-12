@@ -12,16 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import co.parktulua.core.designsystem.Neutro0
 import co.parktulua.core.designsystem.Primario
-import com.univalle.parqueaderoapp.R
 import com.univalle.parqueaderoapp.ui.theme.ButtonText
 
 @Composable
 fun BotonPrincipal(
+    texto: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -46,7 +44,7 @@ fun BotonPrincipal(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = stringResource(R.string.boton_iniciar_sesion),
+                text = texto,
                 style = ButtonText,
                 color = Neutro0,
             )
@@ -54,8 +52,3 @@ fun BotonPrincipal(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun BotonPrincipalPreview() {
-    BotonPrincipal(onClick = {})
-}

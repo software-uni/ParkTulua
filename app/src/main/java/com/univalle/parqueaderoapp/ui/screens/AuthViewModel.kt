@@ -50,6 +50,18 @@ class AuthViewModel(
             }
         }
     }
+
+    fun loginInivitado(){
+        viewModelScope.launch {
+            errorMensaje = null
+            val resultado = repository.iniciarSesionInvitado()
+            resultado.onSuccess {
+                errorMensaje = "Exitor Entraste como invitado"
+            }.onFailure { exception ->
+                errorMensaje = exception.localizedMessage ?: "Error al entrar como invitado "
+            }
+        }
+    }
 }
 
 // Factory para poder crear el ViewModel pasándole el repositorio
