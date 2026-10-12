@@ -77,10 +77,11 @@ fun CampoTextoParqueadero(
             modifier = modifier.fillMaxWidth(),
 
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Primario,
-                unfocusedBorderColor = Neutro600,
+                focusedBorderColor = if (esCompletado && !esError) Disponible else Primario,
+                unfocusedBorderColor = if (esCompletado && !esError) Disponible else Neutro600,
                 errorBorderColor = Lleno,
-                focusedLeadingIconColor = Primario,
+
+                focusedLeadingIconColor = if (esCompletado && !esError) Disponible else Primario,
                 unfocusedLeadingIconColor = Neutro600,
                 errorLeadingIconColor = Lleno,
                 focusedPlaceholderColor = Neutro600,

@@ -29,6 +29,20 @@ class AuthViewModel(
         private set
     var mensajeRecuperacion by mutableStateOf<String?>(null)
         private set
+    var mensajeExito by mutableStateOf<String?>(null)
+        private set
+
+    fun limpiarError() {
+        errorMensaje = null
+    }
+
+    fun limpiarMensajeRecuperacion() {
+        mensajeRecuperacion = null
+    }
+    fun limpiarExito() {
+        mensajeExito = null
+    }
+
 
     fun onEmailChange(nuevoEmail: String) { email = nuevoEmail }
     fun onContrasenaChange(nuevaContrasena: String) { contrasena = nuevaContrasena }
@@ -45,7 +59,7 @@ class AuthViewModel(
             val resultado = repository.iniciarSesion(email, contrasena)
             resultado.onSuccess {
                 // TODO: Navegar a pantalla principal
-                errorMensaje = "¡Éxito! Sesión iniciada."
+                mensajeExito = "¡Éxito! Sesión iniciada."
             }.onFailure { excepcion ->
                 errorMensaje = excepcion.localizedMessage ?: "Error al iniciar sesión"
             }
@@ -117,7 +131,7 @@ class AuthViewModel(
             errorMensaje = null
             val resultado = repository.registrarConCorreo(email, contrasena, nombre)
             resultado.onSuccess {
-                errorMensaje = "¡Cuenta creada con éxito!"
+                mensajeExito = "¡Cuenta creada con éxito!"
             }.onFailure { excepcion ->
                 errorMensaje = excepcion.localizedMessage ?: "Error al registrarse"
             }
@@ -129,7 +143,7 @@ class AuthViewModel(
             errorMensaje = null
             val resultado = repository.iniciarSesionInvitado()
             resultado.onSuccess {
-                errorMensaje = "Exitor Entraste como invitado"
+                mensajeExito = "Exitor Entraste como invitado"
             }.onFailure { exception ->
                 errorMensaje = exception.localizedMessage ?: "Error al entrar como invitado "
             }

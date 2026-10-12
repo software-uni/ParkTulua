@@ -62,15 +62,25 @@ fun LoginScreen(
 
     var mostrarFormulario by remember { mutableStateOf(false) }
 
+    //LAUNCHEDEFFECTS (Notificaciones)
+
     LaunchedEffect(viewModel.mensajeRecuperacion) {
         viewModel.mensajeRecuperacion?.let { mensaje ->
             Toast.makeText(context, mensaje, Toast.LENGTH_LONG).show()
+            viewModel.limpiarMensajeRecuperacion()
         }
     }
 
     LaunchedEffect(viewModel.errorMensaje) {
         viewModel.errorMensaje?.let { error ->
             Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+            viewModel.limpiarError()
+        }
+    }
+    LaunchedEffect(viewModel.mensajeExito) {
+        viewModel.mensajeExito?.let { exito ->
+            Toast.makeText(context, exito, Toast.LENGTH_LONG).show()
+            viewModel.limpiarExito() // Limpiamos para que no se repita al rotar
         }
     }
 

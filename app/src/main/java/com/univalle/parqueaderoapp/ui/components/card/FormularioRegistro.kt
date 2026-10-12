@@ -1,6 +1,5 @@
 package com.univalle.parqueaderoapp.ui.components.card
 
-import android.view.Surface
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,6 +40,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
+import co.parktulua.core.designsystem.Disponible
 
 @Composable
 fun FormularioRegistro(
@@ -69,6 +69,7 @@ fun FormularioRegistro(
     var confirmarPasswordVisible by remember { mutableStateOf(false) }
 
     val correoEsValido = email.contains("@") && email.contains(".") && email.length > 5
+    val contrasenaEsValida = contrasena.isNotBlank() && contrasenaError == null
     val lasContrasenasCoinciden = contrasena.isNotBlank() && contrasena == confirmarContrasena
 
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -133,6 +134,7 @@ fun FormularioRegistro(
             iconoIzquierdo = Icons.Default.Lock,
             esError = contrasenaError != null,
             mensajeError = contrasenaError ?: "",
+            esCompletado = contrasenaEsValida,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
@@ -185,7 +187,7 @@ fun FormularioRegistro(
                 checked = aceptaTerminos,
                 onCheckedChange = onAceptaTerminosChange,
                 colors = CheckboxDefaults.colors(
-                    checkedColor = Acento,
+                    checkedColor = Disponible,
                     checkmarkColor = Color.White
                 )
             )
