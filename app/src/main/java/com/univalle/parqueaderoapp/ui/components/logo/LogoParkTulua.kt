@@ -27,12 +27,12 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.parktulua.core.designsystem.Neutro0
 import co.parktulua.core.designsystem.Neutro900
 import co.parktulua.core.designsystem.Primario
-import co.parktulua.core.designsystem.PrimarioOscuro
 import com.univalle.parqueaderoapp.R
 import com.univalle.parqueaderoapp.ui.theme.Inter
 
@@ -100,7 +100,7 @@ fun LogoPalabra(
     modifier: Modifier = Modifier,
     colorPark: Color = Neutro900,
     colorTulua: Color = Primario,
-    tamanoFuente: androidx.compose.ui.unit.TextUnit = 24.sp,
+    tamanoFuente: TextUnit = 24.sp,
 ) {
     Text(
         text = buildAnnotatedString {
@@ -207,7 +207,7 @@ fun MarcaSuperior(modifier: Modifier = Modifier) {
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 private fun LogoCompletoPreview() {
-    LogoCompleto(modifier = androidx.compose.ui.Modifier.size(width = 280.dp, height = 90.dp))
+    LogoCompleto(modifier = Modifier.size(width = 280.dp, height = 90.dp))
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFF5848B8)

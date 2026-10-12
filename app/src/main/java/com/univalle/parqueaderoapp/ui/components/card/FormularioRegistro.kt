@@ -1,4 +1,4 @@
-package com.univalle.parqueaderoapp.ui.components.botones.card
+package com.univalle.parqueaderoapp.ui.components.card
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,12 +23,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import co.parktulua.core.designsystem.Neutro600
-import com.univalle.parqueaderoapp.ui.components.botones.inputs.CampoTextoParqueadero
+import com.univalle.parqueaderoapp.ui.components.inputs.CampoTextoParqueadero
 import com.univalle.parqueaderoapp.ui.componet.botones.botones.BotonPrincipal
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.focus.onFocusChanged
 
 @Composable

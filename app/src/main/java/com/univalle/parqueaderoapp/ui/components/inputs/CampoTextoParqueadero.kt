@@ -1,4 +1,4 @@
-package com.univalle.parqueaderoapp.ui.components.botones.inputs
+package com.univalle.parqueaderoapp.ui.components.inputs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

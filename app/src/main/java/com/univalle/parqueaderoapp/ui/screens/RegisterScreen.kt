@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,12 +14,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import co.parktulua.core.designsystem.IlustracionMoradoOscuro
 import co.parktulua.core.designsystem.Neutro0
 import co.parktulua.core.designsystem.PrimarioOscuro
-import com.univalle.parqueaderoapp.ui.components.botones.card.FormularioRegistro
+import com.univalle.parqueaderoapp.ui.components.card.FormularioRegistro
 import com.univalle.parqueaderoapp.ui.componet.logo.MarcaSuperior
 
 @Composable
