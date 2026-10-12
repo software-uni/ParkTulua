@@ -38,4 +38,22 @@ class FirebaseAuthRepository(
             Result.failure(e)
         }
     }
+    override suspend fun registrarConCorreo(
+        email: String,
+        contrasena : String,
+        nombre: String
+    ): Result<Boolean>{
+        return try {
+            val authResult = auth.createUserWithEmailAndPassword(email, contrasena).await()
+            val profileUpdates = com.google.firebase.auth.UserProfileChangeRequest.Builder()
+                .setDisplayName(nombre)
+                .build()
+            authResult.user?.updateProfile(profileUpdates)?.await()
+            Result.success(true)
+        } catch (e : CancellationException){
+            throw e
+        } catch (e : Exception){
+            Result.failure(e)
+        }
+    }
 }

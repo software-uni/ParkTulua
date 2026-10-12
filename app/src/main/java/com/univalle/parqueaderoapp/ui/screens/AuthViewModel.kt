@@ -13,6 +13,10 @@ class AuthViewModel(
     private val repository: AuthRepository
 ) : ViewModel() {
 
+    var nombre by mutableStateOf("")
+        private set
+    var confirmarContrasena by mutableStateOf("")
+        private set
     var email by mutableStateOf("")
         private set
     var contrasena by mutableStateOf("")
@@ -22,6 +26,8 @@ class AuthViewModel(
 
     fun onEmailChange(nuevoEmail: String) { email = nuevoEmail }
     fun onContrasenaChange(nuevaContrasena: String) { contrasena = nuevaContrasena }
+    fun onNombreChange(nuevoNombre: String) { nombre = nuevoNombre }
+    fun onConfirmarContrasenaChange(nuevaContrasena: String) { confirmarContrasena = nuevaContrasena }
 
     fun login() {
         if (email.isBlank() || contrasena.isBlank()) {
@@ -47,6 +53,26 @@ class AuthViewModel(
                 errorMensaje = "¡Éxito! Entraste con Google."
             }.onFailure { excepcion ->
                 errorMensaje = excepcion.localizedMessage ?: "Error con Google"
+            }
+        }
+    }
+
+    fun registrarUsuario(){
+        if(nombre.isBlank() || email.isBlank() || contrasena.isBlank()){
+            errorMensaje = "Por favor completa todos los campos."
+            return
+        }
+        if (contrasena != confirmarContrasena) {
+            errorMensaje = "Las contraseñas no coinciden."
+            return
+        }
+        viewModelScope.launch {
+            errorMensaje = null
+            val resultado = repository.registrarConCorreo(email, contrasena, nombre) // Dependiendo de cómo tengas tu repositorio
+            resultado.onSuccess {
+                errorMensaje = "¡Cuenta creada con éxito!"
+            }.onFailure { excepcion ->
+                errorMensaje = excepcion.localizedMessage ?: "Error al registrarse"
             }
         }
     }

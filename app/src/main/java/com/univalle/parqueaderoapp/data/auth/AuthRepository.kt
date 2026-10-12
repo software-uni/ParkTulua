@@ -5,4 +5,5 @@ interface AuthRepository {
     suspend fun iniciarSesionConGoogle(idToken: String) : Result<Boolean>
 
     suspend fun iniciarSesionInvitado() : Result<Boolean>
+    suspend fun registrarConCorreo(email: String, contrasena: String, nombre: String): Result<Boolean>
 }

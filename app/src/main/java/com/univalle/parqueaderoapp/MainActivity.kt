@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.univalle.parqueaderoapp.data.auth.FirebaseAuthRepository
+import com.univalle.parqueaderoapp.ui.navigation.AppNavGraph
 import com.univalle.parqueaderoapp.ui.screens.AuthViewModel
 import com.univalle.parqueaderoapp.ui.screens.AuthViewModelFactory
 import com.univalle.parqueaderoapp.ui.screens.LoginScreen
@@ -30,14 +31,7 @@ class MainActivity : ComponentActivity() {
                 authRepository
             )
             )
-
-            // Si tienes un tema configurado (ej. ParqueaderoAppTheme), envuelve el LoginScreen dentro de él
-            LoginScreen(
-                viewModel = authViewModel,
-                onIniciarSesionClick = { /* TODO: Lógica de inicio de sesión */ },
-                onCrearCuenta = { /* TODO: Navegar a registro */ },
-                onIniciarInvitado = { /* TODO: Lógica de invitado */ }
-            )
+            AppNavGraph(authViewModel = authViewModel)
         }
     }
 }
