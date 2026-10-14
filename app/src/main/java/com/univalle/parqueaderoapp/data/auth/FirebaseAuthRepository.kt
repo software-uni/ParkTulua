@@ -49,6 +49,7 @@ class FirebaseAuthRepository(
                 .setDisplayName(nombre)
                 .build()
             authResult.user?.updateProfile(profileUpdates)?.await()
+            authResult.user?.getIdToken(true)?.await()
             Result.success(true)
         } catch (e : CancellationException){
             throw e

@@ -59,6 +59,7 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:6.5.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation(libs.okhttp)
 
 // Para el botón "Continuar con Google"
     implementation("androidx.credentials:credentials:1.3.0")

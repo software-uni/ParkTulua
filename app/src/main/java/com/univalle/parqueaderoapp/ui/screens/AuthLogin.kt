@@ -46,6 +46,7 @@ import com.univalle.parqueaderoapp.ui.componet.logo.MarcaSplash
 import com.univalle.parqueaderoapp.ui.componet.logo.MarcaSuperior
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 
 
 private val SUBIR_MARCA = 120.dp
@@ -61,6 +62,7 @@ fun LoginScreen(
     val coroutineScope = rememberCoroutineScope()
 
     var mostrarFormulario by remember { mutableStateOf(false) }
+    val webClientId = stringResource(R.string.default_web_client_id)
 
     //LAUNCHEDEFFECTS (Notificaciones)
 
@@ -149,7 +151,8 @@ fun LoginScreen(
 
                                 val googleIdOption = GetGoogleIdOption.Builder()
                                     .setFilterByAuthorizedAccounts(false)
-                                    .setServerClientId("888285203701-2gh4l69mauuca89s2q8045ejrii0vrsu.apps.googleusercontent.com")
+                                    .setServerClientId(webClientId)
+                                    //.setServerClientId("888285203701-2gh4l69mauuca89s2q8045ejrii0vrsu.apps.googleusercontent.com")
                                     .setAutoSelectEnabled(true)
                                     .build()
 

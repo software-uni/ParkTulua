@@ -7,10 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.univalle.parqueaderoapp.data.auth.AuthRepository
+import com.univalle.parqueaderoapp.data.usuario.UsuarioRepository
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val usuarioRepository: UsuarioRepository
 ) : ViewModel() {
 
     var nombre by mutableStateOf("")
@@ -58,7 +60,7 @@ class AuthViewModel(
             errorMensaje = null
             val resultado = repository.iniciarSesion(email, contrasena)
             resultado.onSuccess {
-                // TODO: Navegar a pantalla principal
+                sincronizarConSupabase()
                 mensajeExito = "¡Éxito! Sesión iniciada."
             }.onFailure { excepcion ->
                 errorMensaje = excepcion.localizedMessage ?: "Error al iniciar sesión"
@@ -70,7 +72,8 @@ class AuthViewModel(
             val resultado = repository.iniciarSesionConGoogle(idToken)
             resultado.onSuccess {
                 // ¡Éxito! Aquí navegaremos a la pantalla del mapa después
-                errorMensaje = "¡Éxito! Entraste con Google."
+                sincronizarConSupabase()
+                mensajeExito = "¡Éxito! Entraste con Google."
             }.onFailure { excepcion ->
                 errorMensaje = excepcion.localizedMessage ?: "Error con Google"
             }
@@ -167,13 +170,22 @@ class AuthViewModel(
             }
         }
     }
+    private suspend fun sincronizarConSupabase() {
+        usuarioRepository.sincronizarUsuario().onFailure {
+            // No bloqueamos al usuario: se reintenta en el próximo acceso
+            android.util.Log.w("AuthSupabase", "No se pudo guardar en Supabase: ${it.message}")
+        }
+    }
 
 
 }
 
 // Factory para poder crear el ViewModel pasándole el repositorio
-class AuthViewModelFactory(private val repository: AuthRepository) : ViewModelProvider.Factory {
+class AuthViewModelFactory(
+    private val repository: AuthRepository,
+    private val usuarioRepository: UsuarioRepository
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return AuthViewModel(repository) as T
+        return AuthViewModel(repository, usuarioRepository) as T
     }
 }
