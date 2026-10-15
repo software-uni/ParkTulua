@@ -2,6 +2,7 @@ package com.univalle.parqueaderoapp.ui.auth
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,6 +48,10 @@ fun RegistroScreen(
     val context = LocalContext.current
     var aceptaTerminos by remember { mutableStateOf(false) }
 
+    BackHandler{
+        onVolverLoginClick()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -73,20 +78,6 @@ fun RegistroScreen(
                     .padding(start = 24.dp, top = 16.dp, end = 24.dp, bottom = 24.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = onVolverLoginClick,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(Neutro0, shape = CircleShape)
-                        .clip(CircleShape)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowLeft,
-                        contentDescription = "Volver",
-                        tint = PrimarioOscuro
-                    )
-                }
-                Spacer(modifier = Modifier.width(16.dp))
                 MarcaSuperior()
             }
             Spacer(modifier = Modifier.height(16.dp))
