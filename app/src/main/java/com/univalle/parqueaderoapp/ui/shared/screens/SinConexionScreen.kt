@@ -1,4 +1,4 @@
-package com.univalle.parqueaderoapp.ui.screens
+package com.univalle.parqueaderoapp.ui.shared.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ErrorOutline
+import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,9 +32,8 @@ import co.parktulua.core.designsystem.PrimarioClaro
 import com.univalle.parqueaderoapp.ui.componet.botones.botones.BotonPrincipal
 
 @Composable
-fun ErrorServidorScreen(
-    onReintentarClick : () -> Unit,
-    mensajeError : String = "Estamos expreimentando dificultades tecnicas .\n or favor, intenta de nuevo más tarde."
+fun SinConexionScreen(
+    onReintentarClick : () -> Unit
 ){
     Column(
         modifier = Modifier
@@ -46,24 +45,26 @@ fun ErrorServidorScreen(
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-        //Circulo de advertencia
+        //circulo morado del icono
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .size(1120.dp)
+                .size(120.dp)
                 .clip(CircleShape)
                 .background(PrimarioClaro)
-        ) {
+        ){
             Icon(
-                imageVector = Icons.Outlined.ErrorOutline,
-                contentDescription = "Error del servidor",
+                imageVector = Icons.Outlined.CloudOff,
+                contentDescription = "Sin conexión ",
                 tint = Primario,
                 modifier = Modifier.size(48.dp)
             )
         }
         Spacer(modifier = Modifier.height(32.dp))
+
+        //Textos normales
         Text(
-            text = "¡Ups! Algo salió mal",
+            text = "Sin conexión",
             color = Neutro900,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
@@ -72,13 +73,12 @@ fun ErrorServidorScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = mensajeError,
+            text = "Revisa tu internet para ver los\nparqueaderos y su disponibilidad.",
             color = Neutro600,
             fontSize = 16.sp,
             textAlign = TextAlign.Center,
             lineHeight = 24.sp
         )
-
         Spacer(modifier = Modifier.weight(1f))
 
         BotonPrincipal(
@@ -89,7 +89,7 @@ fun ErrorServidorScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Si el problema persiste, contacta a soporte",
+            text = "Se actualizará solo cuando vuelva la conexión",
             color = Neutro600,
             fontSize = 13.sp,
             textAlign = TextAlign.Center,
@@ -100,6 +100,8 @@ fun ErrorServidorScreen(
 }
 @Preview(showBackground = true)
 @Composable
-private fun ErrorServidorScreenPreview() {
-    ErrorServidorScreen(onReintentarClick = {})
+private fun SinConexionScreenPreview() {
+    SinConexionScreen(
+        onReintentarClick = {}
+    )
 }

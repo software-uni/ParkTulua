@@ -1,4 +1,4 @@
-package com.univalle.parqueaderoapp.ui.Auth
+package com.univalle.parqueaderoapp.ui.auth
 
 import android.util.Log
 import android.widget.Toast
@@ -47,7 +47,7 @@ import com.univalle.parqueaderoapp.ui.componet.logo.MarcaSuperior
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-
+import androidx.activity.compose.BackHandler
 
 private val SUBIR_MARCA = 120.dp
 
@@ -202,6 +202,9 @@ fun LoginScreen(
             enter = fadeIn(animationSpec = tween(durationMillis = 400)),
         ) {
             MarcaSuperior()
+        }
+        BackHandler(enabled = mostrarFormulario) {
+            mostrarFormulario = false
         }
     }
 }

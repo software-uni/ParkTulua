@@ -15,9 +15,9 @@ import com.univalle.parqueaderoapp.data.auth.FirebaseAuthRepository
 import com.univalle.parqueaderoapp.data.usuario.ConfiguracionSupabase
 import com.univalle.parqueaderoapp.data.usuario.SupabaseUsuarioRepository
 import com.univalle.parqueaderoapp.ui.navigation.AppNavGraph
-import com.univalle.parqueaderoapp.ui.Auth.AuthViewModel
-import com.univalle.parqueaderoapp.ui.Auth.AuthViewModelFactory
-import com.univalle.parqueaderoapp.ui.screens.SinConexionScreen
+import com.univalle.parqueaderoapp.ui.auth.AuthViewModel
+import com.univalle.parqueaderoapp.ui.auth.AuthViewModelFactory
+import com.univalle.parqueaderoapp.ui.shared.screens.SinConexionScreen
 import okhttp3.OkHttpClient
 
 

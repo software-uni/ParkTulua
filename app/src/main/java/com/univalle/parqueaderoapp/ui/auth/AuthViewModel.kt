@@ -1,4 +1,4 @@
-package com.univalle.parqueaderoapp.ui.Auth
+package com.univalle.parqueaderoapp.ui.auth
 
 import android.util.Log
 import android.util.Patterns

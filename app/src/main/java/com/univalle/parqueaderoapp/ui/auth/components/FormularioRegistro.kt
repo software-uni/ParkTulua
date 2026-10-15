@@ -1,4 +1,4 @@
-package com.univalle.parqueaderoapp.ui.Auth.components
+package com.univalle.parqueaderoapp.ui.auth.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

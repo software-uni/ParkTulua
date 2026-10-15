@@ -22,7 +22,7 @@ import co.parktulua.core.designsystem.Neutro0
 import co.parktulua.core.designsystem.Neutro600
 import co.parktulua.core.designsystem.Neutro900
 import com.univalle.parqueaderoapp.R
-import com.univalle.parqueaderoapp.ui.Auth.components.FormularioCorreo
+import com.univalle.parqueaderoapp.ui.auth.components.FormularioCorreo
 import com.univalle.parqueaderoapp.ui.componet.botones.botones.BotonGoogle
 import com.univalle.parqueaderoapp.ui.componet.botones.botones.BotonPrincipal
 import com.univalle.parqueaderoapp.ui.componet.botones.botones.BotonSecundario
