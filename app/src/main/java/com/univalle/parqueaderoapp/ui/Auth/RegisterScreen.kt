@@ -1,4 +1,4 @@
-package com.univalle.parqueaderoapp.ui.screens
+package com.univalle.parqueaderoapp.ui.Auth
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import co.parktulua.core.designsystem.IlustracionMoradoOscuro
 import co.parktulua.core.designsystem.Neutro0
 import co.parktulua.core.designsystem.PrimarioOscuro
-import com.univalle.parqueaderoapp.ui.components.card.FormularioRegistro
+import com.univalle.parqueaderoapp.ui.Auth.components.FormularioRegistro
 import com.univalle.parqueaderoapp.ui.componet.logo.MarcaSuperior
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue

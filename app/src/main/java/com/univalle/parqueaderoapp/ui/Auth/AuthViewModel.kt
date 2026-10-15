@@ -1,5 +1,7 @@
-package com.univalle.parqueaderoapp.ui.screens
+package com.univalle.parqueaderoapp.ui.Auth
 
+import android.util.Log
+import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -81,7 +83,7 @@ class AuthViewModel(
     }
 
     fun validarEmailEnvivo(){
-        val patronCorreo = android.util.Patterns.EMAIL_ADDRESS
+        val patronCorreo = Patterns.EMAIL_ADDRESS
         if(email.isBlank()){
             emailError = null
         }
@@ -109,10 +111,10 @@ class AuthViewModel(
             return
         }
         //validamos formatos de correo valido
-        val patronCorreo = android.util.Patterns.EMAIL_ADDRESS
+        val patronCorreo = Patterns.EMAIL_ADDRESS
         if (!patronCorreo.matcher(email).matches()) {
             emailError = "Por favor ingresa un correo electrónico válido."
-            android.util.Log.d("AuthDebug", ">>> El correo falló la validación: $email")
+            Log.d("AuthDebug", ">>> El correo falló la validación: $email")
             return
         } else{
             emailError = null
@@ -173,7 +175,7 @@ class AuthViewModel(
     private suspend fun sincronizarConSupabase() {
         usuarioRepository.sincronizarUsuario().onFailure {
             // No bloqueamos al usuario: se reintenta en el próximo acceso
-            android.util.Log.w("AuthSupabase", "No se pudo guardar en Supabase: ${it.message}")
+            Log.w("AuthSupabase", "No se pudo guardar en Supabase: ${it.message}")
         }
     }
 

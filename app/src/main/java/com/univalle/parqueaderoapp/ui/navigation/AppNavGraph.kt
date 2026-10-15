@@ -2,11 +2,11 @@ package com.univalle.parqueaderoapp.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
-import com.univalle.parqueaderoapp.ui.screens.AuthViewModel
-import com.univalle.parqueaderoapp.ui.screens.RegistroScreen
+import com.univalle.parqueaderoapp.ui.Auth.AuthViewModel
+import com.univalle.parqueaderoapp.ui.Auth.RegistroScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.univalle.parqueaderoapp.ui.screens.LoginScreen
+import com.univalle.parqueaderoapp.ui.Auth.LoginScreen
 
 
 object AppScreens{

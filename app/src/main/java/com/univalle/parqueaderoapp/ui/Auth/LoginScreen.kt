@@ -1,4 +1,4 @@
-package com.univalle.parqueaderoapp.ui.screens
+package com.univalle.parqueaderoapp.ui.Auth
 
 import android.util.Log
 import android.widget.Toast

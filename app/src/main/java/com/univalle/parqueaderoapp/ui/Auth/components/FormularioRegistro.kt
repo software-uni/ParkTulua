@@ -1,4 +1,4 @@
-package com.univalle.parqueaderoapp.ui.components.card
+package com.univalle.parqueaderoapp.ui.Auth.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,15 +31,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
-import co.parktulua.core.designsystem.Acento
 import co.parktulua.core.designsystem.Neutro600
 import co.parktulua.core.designsystem.Neutro900
-import com.univalle.parqueaderoapp.ui.components.inputs.CampoTextoParqueadero
+import com.univalle.parqueaderoapp.ui.shared.inputs.CampoTextoParqueadero
 import com.univalle.parqueaderoapp.ui.componet.botones.botones.BotonPrincipal
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.tooling.preview.Preview
 import co.parktulua.core.designsystem.Disponible
 
 @Composable
