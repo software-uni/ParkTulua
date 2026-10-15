@@ -1,5 +1,7 @@
-package com.univalle.parqueaderoapp.ui.screens
+package com.univalle.parqueaderoapp.ui.auth
 
+import android.util.Log
+import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,10 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.univalle.parqueaderoapp.data.auth.AuthRepository
+import com.univalle.parqueaderoapp.data.usuario.UsuarioRepository
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val usuarioRepository: UsuarioRepository
 ) : ViewModel() {
 
     var nombre by mutableStateOf("")
@@ -58,7 +62,7 @@ class AuthViewModel(
             errorMensaje = null
             val resultado = repository.iniciarSesion(email, contrasena)
             resultado.onSuccess {
-                // TODO: Navegar a pantalla principal
+                sincronizarConSupabase()
                 mensajeExito = "¡Éxito! Sesión iniciada."
             }.onFailure { excepcion ->
                 errorMensaje = excepcion.localizedMessage ?: "Error al iniciar sesión"
@@ -70,7 +74,8 @@ class AuthViewModel(
             val resultado = repository.iniciarSesionConGoogle(idToken)
             resultado.onSuccess {
                 // ¡Éxito! Aquí navegaremos a la pantalla del mapa después
-                errorMensaje = "¡Éxito! Entraste con Google."
+                sincronizarConSupabase()
+                mensajeExito = "¡Éxito! Entraste con Google."
             }.onFailure { excepcion ->
                 errorMensaje = excepcion.localizedMessage ?: "Error con Google"
             }
@@ -78,7 +83,7 @@ class AuthViewModel(
     }
 
     fun validarEmailEnvivo(){
-        val patronCorreo = android.util.Patterns.EMAIL_ADDRESS
+        val patronCorreo = Patterns.EMAIL_ADDRESS
         if(email.isBlank()){
             emailError = null
         }
@@ -106,10 +111,10 @@ class AuthViewModel(
             return
         }
         //validamos formatos de correo valido
-        val patronCorreo = android.util.Patterns.EMAIL_ADDRESS
+        val patronCorreo = Patterns.EMAIL_ADDRESS
         if (!patronCorreo.matcher(email).matches()) {
             emailError = "Por favor ingresa un correo electrónico válido."
-            android.util.Log.d("AuthDebug", ">>> El correo falló la validación: $email")
+            Log.d("AuthDebug", ">>> El correo falló la validación: $email")
             return
         } else{
             emailError = null
@@ -167,13 +172,22 @@ class AuthViewModel(
             }
         }
     }
+    private suspend fun sincronizarConSupabase() {
+        usuarioRepository.sincronizarUsuario().onFailure {
+            // No bloqueamos al usuario: se reintenta en el próximo acceso
+            Log.w("AuthSupabase", "No se pudo guardar en Supabase: ${it.message}")
+        }
+    }
 
 
 }
 
 // Factory para poder crear el ViewModel pasándole el repositorio
-class AuthViewModelFactory(private val repository: AuthRepository) : ViewModelProvider.Factory {
+class AuthViewModelFactory(
+    private val repository: AuthRepository,
+    private val usuarioRepository: UsuarioRepository
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return AuthViewModel(repository) as T
+        return AuthViewModel(repository, usuarioRepository) as T
     }
 }
