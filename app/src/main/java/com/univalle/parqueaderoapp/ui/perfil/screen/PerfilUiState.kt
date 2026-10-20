@@ -1,0 +1,26 @@
+package com.univalle.parqueaderoapp.ui.perfil.screen
+
+data class VehiculoUiModel(
+    val id: String,
+    val placa: String,
+    val tipo: String
+)
+data class PerfilUiState(
+    val isLoading: Boolean = true,
+    val nombre: String = "",
+    val correo: String = "",
+    val vehiculos: List<VehiculoUiModel> = emptyList(),
+    val errorMensaje: String? = null
+){
+    val mostrarEstadoVacio: Boolean
+        get() = !isLoading && vehiculos.isEmpty() && errorMensaje == null
+
+    val cantidadVehiculos: Int
+        get() = vehiculos.size
+}
+sealed class PerfilAccion {
+    object EditarPerfilClick : PerfilAccion()
+    object CerrarSesionClick : PerfilAccion()
+    object AgregarVehiculoClick : PerfilAccion()
+    object RecargarDatos : PerfilAccion()
+}
