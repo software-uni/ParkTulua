@@ -4,9 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -15,8 +19,8 @@ import com.univalle.parqueaderoapp.data.auth.FirebaseAuthRepository
 import com.univalle.parqueaderoapp.data.usuario.ConfiguracionSupabase
 import com.univalle.parqueaderoapp.data.usuario.SupabaseUsuarioRepository
 import com.univalle.parqueaderoapp.ui.navigation.AppNavGraph
-import com.univalle.parqueaderoapp.ui.auth.AuthViewModel
-import com.univalle.parqueaderoapp.ui.auth.AuthViewModelFactory
+import com.univalle.parqueaderoapp.ui.auth.screen.AuthViewModel
+import com.univalle.parqueaderoapp.ui.auth.screen.AuthViewModelFactory
 import com.univalle.parqueaderoapp.ui.shared.screens.SinConexionScreen
 import okhttp3.OkHttpClient
 
@@ -42,20 +46,12 @@ class MainActivity : ComponentActivity() {
             //1. obtenemos el contexto y creamos el observador
             val context = LocalContext.current
             val networkObserver = remember { NetworkConnectivityObserver(context) }
-
-            //2. Escuchamos el estado del internet en timepo real
             val isConnected by networkObserver.isConnected.collectAsState(initial = true)
-            AppNavGraph(authViewModel = authViewModel)
-
-            //condicional para mostrar la app o la pantalla de error
-            if(isConnected){
+            Box(modifier = Modifier.fillMaxSize()) {
                 AppNavGraph(authViewModel = authViewModel)
-            }else{
-                SinConexionScreen (
-                    onReintentarClick ={
-
-                    }
-                )
+                if (!isConnected) {
+                    SinConexionScreen(onReintentarClick = {})
+                }
             }
         }
     }

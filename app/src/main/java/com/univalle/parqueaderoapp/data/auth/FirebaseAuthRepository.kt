@@ -49,6 +49,7 @@ class FirebaseAuthRepository(
                 .setDisplayName(nombre)
                 .build()
             authResult.user?.updateProfile(profileUpdates)?.await()
+            authResult.user?.sendEmailVerification()?.await()
             authResult.user?.getIdToken(true)?.await()
             Result.success(true)
         } catch (e : CancellationException){
@@ -65,5 +66,35 @@ class FirebaseAuthRepository(
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+    override suspend fun reenviarVerificacion(): Result<Unit> {
+        return try {
+            val usuario = auth.currentUser
+                ?: return Result.failure(IllegalStateException("Sin sesión activa"))
+            usuario.sendEmailVerification().await()
+            Result.success(Unit)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun verificarCorreo(): Result<Boolean> {
+        return try {
+            val usuario = auth.currentUser
+                ?: return Result.failure(IllegalStateException("Sin sesión activa"))
+            usuario.reload().await()
+            // El token viejo sigue diciendo "sin verificar": hay que pedir uno nuevo
+            if (usuario.isEmailVerified) usuario.getIdToken(true).await()
+            Result.success(usuario.isEmailVerified)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    override fun cerrarSesion() {
+        auth.signOut()
     }
 }
