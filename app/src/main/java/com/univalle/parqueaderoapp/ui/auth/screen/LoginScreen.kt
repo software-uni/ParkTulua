@@ -48,6 +48,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.activity.compose.BackHandler
+import androidx.compose.runtime.saveable.rememberSaveable
 
 private val SUBIR_MARCA = 120.dp
 
@@ -61,7 +62,7 @@ fun LoginScreen(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    var mostrarFormulario by remember { mutableStateOf(false) }
+    var mostrarFormulario by rememberSaveable { mutableStateOf(false) }
     val webClientId = stringResource(R.string.default_web_client_id)
 
     //LAUNCHEDEFFECTS (Notificaciones)
@@ -92,10 +93,13 @@ fun LoginScreen(
 
     val progreso by animateLottieCompositionAsState(
         composition = composition,
-        iterations = 1
+        iterations = 1,
+        isPlaying = !viewModel.introVista
     )
-
-    val animacionFinalizo = progreso == 1f
+    LaunchedEffect(progreso) {
+        if (progreso == 1f) viewModel.marcarIntroVista()
+    }
+    val animacionFinalizo = viewModel.introVista || progreso == 1f
 
     Box(
         modifier = Modifier
@@ -115,7 +119,7 @@ fun LoginScreen(
 
             LottieAnimation(
                 composition = composition,
-                progress = { progreso },
+                progress = { if (viewModel.introVista) 1f else progreso },
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)

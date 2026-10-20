@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.univalle.parqueaderoapp.core.network.NetworkConnectivityObserver
 import com.univalle.parqueaderoapp.data.auth.FirebaseAuthRepository
 import com.univalle.parqueaderoapp.data.usuario.ConfiguracionSupabase
+import com.univalle.parqueaderoapp.data.usuario.FotoPerfilLocal
 import com.univalle.parqueaderoapp.data.usuario.SupabaseUsuarioRepository
 import com.univalle.parqueaderoapp.ui.navigation.AppNavGraph
 import com.univalle.parqueaderoapp.ui.auth.screen.AuthViewModel
@@ -28,6 +29,7 @@ import okhttp3.OkHttpClient
 class MainActivity : ComponentActivity() {
     private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val authRepository by lazy { FirebaseAuthRepository(firebaseAuth) }
+    private val fotoLocal by lazy { FotoPerfilLocal(applicationContext) }
     private val usuarioRepository by lazy {
         SupabaseUsuarioRepository(
             auth = firebaseAuth,
@@ -41,7 +43,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val authViewModel: AuthViewModel = viewModel(
-                factory = AuthViewModelFactory(authRepository, usuarioRepository)
+                factory = AuthViewModelFactory(authRepository, usuarioRepository, fotoLocal)
             )
             //1. obtenemos el contexto y creamos el observador
             val context = LocalContext.current

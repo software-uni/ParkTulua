@@ -94,6 +94,7 @@ class FirebaseAuthRepository(
             Result.failure(e)
         }
     }
+    override fun uidActual(): String? = auth.currentUser?.uid
     override fun cerrarSesion() {
         auth.signOut()
     }

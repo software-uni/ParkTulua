@@ -31,7 +31,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -52,6 +51,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import co.parktulua.core.designsystem.Acento
 import coil.compose.AsyncImage
 import co.parktulua.core.designsystem.Disponible
 import co.parktulua.core.designsystem.FondoApp
@@ -234,7 +234,7 @@ fun FormularioRegistro(
             Text(text = "¿Ya tienes cuenta? ", color = Neutro600, fontSize = 14.sp)
             Text(
                 text = "Inicia sesión",
-                color = Disponible,
+                color = Acento,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 modifier = Modifier.clickable { onVolverLoginClick() }
@@ -328,20 +328,3 @@ private fun Modifier.alPerderFoco(accion: () -> Unit): Modifier {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-@Composable
-private fun FormularioRegistroPreview() {
-    Surface(modifier = Modifier.padding(16.dp)) {
-        FormularioRegistro(
-            estado = RegistroUiState(
-                nombre = "Juan",
-                apellido = "Pérez",
-                email = "juan@correo.com",
-                contrasena = "Admin123*",
-                confirmarContrasena = "Admin123*"
-            ),
-            onAccion = {},
-            onVolverLoginClick = {}
-        )
-    }
-}

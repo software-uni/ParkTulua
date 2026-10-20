@@ -10,12 +10,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.univalle.parqueaderoapp.data.auth.AuthRepository
+import com.univalle.parqueaderoapp.data.usuario.FotoPerfilLocal
 import com.univalle.parqueaderoapp.data.usuario.UsuarioRepository
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
     private val repository: AuthRepository,
-    private val usuarioRepository: UsuarioRepository
+    private val usuarioRepository: UsuarioRepository,
+    private val fotoLocal: FotoPerfilLocal
 ) : ViewModel() {
 
 
@@ -52,6 +54,12 @@ class AuthViewModel(
         private set
     var correoVerificado by mutableStateOf(false)
         private set
+    var introVista by mutableStateOf(false)
+        private set
+
+    fun marcarIntroVista() {
+        introVista = true
+    }
 
     fun onFotoChange(nuevaUri: Uri?) {
         fotoUri = nuevaUri
@@ -152,11 +160,14 @@ class AuthViewModel(
             errorMensaje = null
 
             //unimos el nombre  y apellidos antes de enviarlos
-            val nombreCompleto = "${nombre.trim()}${apellido.trim()} "
+            val nombreCompleto = "${nombre.trim()} ${apellido.trim()}"
 
             val resultado = repository.registrarConCorreo(email, contrasena, nombreCompleto)
             resultado.onSuccess {
                 mensajeExito = "¡Cuenta creada con éxito!"
+                val uid = repository.uidActual()
+                val uri = fotoUri
+                if (uid != null && uri != null) fotoLocal.guardar(uid, uri)
                 requiereVerificacion = true
             }.onFailure { excepcion ->
                 val msj = excepcion.localizedMessage ?: ""
@@ -174,17 +185,18 @@ class AuthViewModel(
         }
     }
 
-    fun comprobarVerificacion(silecioso : Boolean = false) {
-        if (isLoading) return
+    fun comprobarVerificacion(silecioso: Boolean = false) {
+        if (isLoading || correoVerificado) return
         viewModelScope.launch {
-            if(!silecioso) isLoading = true
+            if (!silecioso) isLoading = true
             repository.verificarCorreo()
                 .onSuccess { verificado ->
                     if (verificado) {
                         sincronizarConSupabase()
                         correoVerificado = true
                     } else {
-                        errorMensaje = "Aún no has verificado tu correo. Revisa tu bandeja y toca el enlace."
+                        errorMensaje =
+                            "Aún no has verificado tu correo. Revisa tu bandeja y toca el enlace."
                     }
                 }
                 .onFailure { errorMensaje = it.localizedMessage ?: "No se pudo comprobar" }
@@ -215,15 +227,14 @@ class AuthViewModel(
             errorMensaje = null
             repository.iniciarSesion(email, contrasena)
                 .onSuccess {
-                   repository.verificarCorreo().onSuccess{verificado ->
-                       if (verificado){
-                           sincronizarConSupabase()
-                           mensajeExito = "¡Éxito! Sesión iniciada."
-                       }
-                       else{
-                           requiereVerificacion = true
-                       }
-                   }.onFailure {errorMensaje = it.localizedMessage ?:  "Error al iniciar sesión"}
+                    repository.verificarCorreo().onSuccess { verificado ->
+                        if (verificado) {
+                            sincronizarConSupabase()
+                            mensajeExito = "¡Éxito! Sesión iniciada."
+                        } else {
+                            requiereVerificacion = true
+                        }
+                    }.onFailure { errorMensaje = it.localizedMessage ?: "Error al iniciar sesión" }
 
                 }.onFailure { errorMensaje = it.localizedMessage ?: "Error al iniciar sesión" }
         }
@@ -274,23 +285,25 @@ class AuthViewModel(
     }
 
     private suspend fun sincronizarConSupabase() {
-        usuarioRepository.sincronizarUsuario().onFailure {
-            // No bloqueamos al usuario: se reintenta en el próximo acceso
-            Log.w("AuthSupabase", "No se pudo guardar en Supabase: ${it.message}")
-        }
+        val uid = repository.uidActual()
+        val foto = uid?.let { fotoLocal.leer(it) }
+        usuarioRepository.sincronizarUsuario(foto)
+            .onSuccess { if (uid != null) fotoLocal.borrar(uid) }
+            .onFailure {
+                // No bloqueamos al usuario: se reintenta en el próximo acceso
+                Log.w("AuthSupabase", "No se pudo guardar en Supabase: ${it.message}")
+            }
     }
-
-
-
-
 }
 
 // Factory para poder crear el ViewModel pasándole el repositorio
 class AuthViewModelFactory(
     private val repository: AuthRepository,
-    private val usuarioRepository: UsuarioRepository
+    private val usuarioRepository: UsuarioRepository,
+    private val fotoLocal: FotoPerfilLocal
+
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return AuthViewModel(repository, usuarioRepository) as T
+        return AuthViewModel(repository, usuarioRepository, fotoLocal) as T
     }
 }
