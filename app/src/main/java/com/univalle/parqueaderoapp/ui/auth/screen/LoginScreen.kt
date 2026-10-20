@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.    ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +47,10 @@ import kotlinx.coroutines.launch
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.saveable.rememberSaveable
 
 private val SUBIR_MARCA = 120.dp
@@ -57,10 +60,12 @@ fun LoginScreen(
     viewModel: AuthViewModel,
     onIniciarSesionClick: () -> Unit,
     onCrearCuenta: () -> Unit,
+
     onIniciarInvitado: () -> Unit
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
 
     var mostrarFormulario by rememberSaveable { mutableStateOf(false) }
     val webClientId = stringResource(R.string.default_web_client_id)
@@ -114,7 +119,11 @@ fun LoginScreen(
             )
     ) {
 
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .imePadding()
+            .verticalScroll(scrollState)
+        ) {
             Spacer(modifier = Modifier.height(40.dp))
 
             LottieAnimation(

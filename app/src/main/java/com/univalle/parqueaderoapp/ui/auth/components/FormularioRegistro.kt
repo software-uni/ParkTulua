@@ -12,21 +12,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
@@ -48,7 +49,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.parktulua.core.designsystem.Acento
@@ -74,7 +74,12 @@ fun FormularioRegistro(
     val correoEsValido = Patterns.EMAIL_ADDRESS.matcher(estado.email).matches()
     val contrasenaEsValida = estado.contrasena.isNotBlank() && estado.contrasenaError == null
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
 
         // --- 1. TÍTULOS ---
         Text(
@@ -83,21 +88,20 @@ fun FormularioRegistro(
             fontSize = 24.sp,
             color = Neutro900
         )
-        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "Reserva en segundos y guarda tu historial de pagos. No pedimos la placa para registrarte.",
             fontSize = 14.sp,
             color = Neutro600,
             lineHeight = 20.sp
         )
-        Spacer(modifier = Modifier.height(24.dp))
 
-        // --- 2. FOTO DE PERFIL ---
-        FotoPerfil(
+        Spacer(modifier = Modifier.height(2.dp))
+
+        // --- 2. SELECTOR DE FOTO HORIZONTAL ---
+        SelectorFotoHorizontal(
             foto = estado.foto,
             onFotoSeleccionada = { onAccion(RegistroAccion.FotoSeleccionada(it)) }
         )
-        Spacer(modifier = Modifier.height(24.dp))
 
         // --- 3. NOMBRES Y APELLIDOS ---
         Row(
@@ -109,7 +113,7 @@ fun FormularioRegistro(
                     label = "Nombres",
                     value = estado.nombre,
                     onValueChange = { onAccion(RegistroAccion.NombreCambio(it)) },
-                    placeholder = "juan",
+                    placeholder = "Nombre",
                     iconoIzquierdo = Icons.Default.Person,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
@@ -119,20 +123,19 @@ fun FormularioRegistro(
                     label = "Apellidos",
                     value = estado.apellido,
                     onValueChange = { onAccion(RegistroAccion.ApellidoCambio(it)) },
-                    placeholder = "paredes",
+                    placeholder = "Apellido",
                     iconoIzquierdo = Icons.Default.Person,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
             }
         }
-        Spacer(modifier = Modifier.height(14.dp))
 
-        // --- 4. CORREO ---
+        // --- 4. CORREO ELECTRÓNICO ---
         CampoTextoParqueadero(
             label = "Correo electrónico",
             value = estado.email,
             onValueChange = { onAccion(RegistroAccion.EmailCambio(it)) },
-            placeholder = "ejemplo@gmail.com",
+            placeholder = "tucorreo@ejemplo.com",
             iconoIzquierdo = Icons.Default.Email,
             esError = estado.emailError != null,
             mensajeError = estado.emailError.orEmpty(),
@@ -145,14 +148,13 @@ fun FormularioRegistro(
                 .fillMaxWidth()
                 .alPerderFoco { onAccion(RegistroAccion.EmailPerdioFoco) }
         )
-        Spacer(modifier = Modifier.height(14.dp))
 
         // --- 5. CONTRASEÑA ---
         CampoTextoParqueadero(
             label = "Contraseña",
             value = estado.contrasena,
             onValueChange = { onAccion(RegistroAccion.ContrasenaCambio(it)) },
-            placeholder = "Tu contraseña segura",
+            placeholder = "Mínimo 8 caracteres",
             iconoIzquierdo = Icons.Default.Lock,
             esError = estado.contrasenaError != null,
             mensajeError = estado.contrasenaError.orEmpty(),
@@ -172,7 +174,6 @@ fun FormularioRegistro(
                 )
             }
         )
-        Spacer(modifier = Modifier.height(14.dp))
 
         // --- 6. CONFIRMAR CONTRASEÑA ---
         CampoTextoParqueadero(
@@ -187,6 +188,7 @@ fun FormularioRegistro(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
             ),
+            modifier = Modifier.fillMaxWidth(),
             iconoDerecho = {
                 BotonVerOcultar(
                     visible = confirmarVisible,
@@ -194,14 +196,11 @@ fun FormularioRegistro(
                 )
             }
         )
-        Spacer(modifier = Modifier.height(16.dp))
 
         // --- 7. TÉRMINOS Y CONDICIONES ---
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
             Checkbox(
                 checked = estado.aceptaTerminos,
@@ -219,13 +218,16 @@ fun FormularioRegistro(
             )
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         // --- 8. BOTÓN PRINCIPAL ---
         BotonPrincipal(
             texto = if (estado.isLoading) "Registrando..." else "Crear cuenta",
             onClick = { onAccion(RegistroAccion.Registrar) },
             enabled = estado.puedeRegistrar
         )
-        Spacer(modifier = Modifier.height(24.dp))
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -240,11 +242,14 @@ fun FormularioRegistro(
                 modifier = Modifier.clickable { onVolverLoginClick() }
             )
         }
+
+        // Margen de resguardo inferior para el teclado virtual
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
 @Composable
-private fun FotoPerfil(
+private fun SelectorFotoHorizontal(
     foto: Uri?,
     onFotoSeleccionada: (Uri?) -> Unit
 ) {
@@ -254,49 +259,59 @@ private fun FotoPerfil(
         if (uri != null) onFotoSeleccionada(uri)
     }
 
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                selectorDeFoto.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
+            },
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(containerColor = FondoApp)
     ) {
-        Box(
+        Row(
             modifier = Modifier
-                .size(100.dp)
-                .clip(CircleShape)
-                .background(FondoApp)
-                .clickable {
-                    selectorDeFoto.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                },
-            contentAlignment = Alignment.Center
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            if (foto != null) {
-                AsyncImage(
-                    model = foto,
-                    contentDescription = "Foto de perfil. Toca para cambiarla",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            } else {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Agregar foto de perfil",
-                    tint = Neutro600,
-                    modifier = Modifier.size(50.dp)
-                )
-            }
             Box(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .offset(x = (-4).dp, y = (-4).dp)
-                    .background(Disponible, CircleShape)
-                    .padding(6.dp)
+                    .size(50.dp)
+                    .clip(CircleShape)
+                    .background(Color.White),
+                contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.CameraAlt,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(16.dp)
+                if (foto != null) {
+                    AsyncImage(
+                        model = foto,
+                        contentDescription = "Foto de perfil",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.AddAPhoto,
+                        contentDescription = "Agregar foto",
+                        tint = Acento,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+
+            Column {
+                Text(
+                    text = "Agregar foto",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp,
+                    color = Neutro900
+                )
+                Text(
+                    text = "Opcional",
+                    fontSize = 12.sp,
+                    color = Neutro600
                 )
             }
         }
@@ -317,8 +332,6 @@ private fun BotonVerOcultar(
     }
 }
 
-// Llama a la acción solo cuando el campo tenía el foco y lo pierde.
-// Sin esto, la validación se disparaba al abrir la pantalla con los campos vacíos.
 @Composable
 private fun Modifier.alPerderFoco(accion: () -> Unit): Modifier {
     var teniaFoco by remember { mutableStateOf(false) }
@@ -327,4 +340,3 @@ private fun Modifier.alPerderFoco(accion: () -> Unit): Modifier {
         teniaFoco = foco.isFocused
     }
 }
-

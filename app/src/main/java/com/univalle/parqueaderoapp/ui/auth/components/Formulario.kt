@@ -116,6 +116,8 @@ fun FormularioCorreo(
             texto = "Entrar",
             onClick = onEntrarClick
         )
+
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 @Preview(showBackground = true)

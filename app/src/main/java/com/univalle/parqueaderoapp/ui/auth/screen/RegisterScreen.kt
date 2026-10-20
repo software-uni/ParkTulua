@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -16,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import co.parktulua.core.designsystem.Neutro0
 import com.univalle.parqueaderoapp.ui.auth.components.FormularioRegistro
 
-// Mismo nombre y parámetros de siempre: AppNavGraph no cambia.
 @Composable
 fun RegistroScreen(
     viewModel: AuthViewModel,
@@ -25,7 +26,6 @@ fun RegistroScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     BackHandler(onBack = onVolverLoginClick)
-
 
     LaunchedEffect(viewModel.errorMensaje) {
         viewModel.errorMensaje?.let { error ->
@@ -60,13 +60,13 @@ fun RegistroScreen(
                 is RegistroAccion.ConfirmarContrasenaCambio -> viewModel.onConfirmarContrasenaChange(accion.valor)
                 is RegistroAccion.TerminosCambio -> viewModel.onTerminosChange(accion.aceptados)
                 RegistroAccion.Registrar -> viewModel.registrarUsuario()
+                else -> {}
             }
         },
         onVolverLoginClick = onVolverLoginClick
     )
 }
 
-// Solo dibuja: no conoce el ViewModel.
 @Composable
 private fun RegistroContenido(
     estado: RegistroUiState,
@@ -74,6 +74,8 @@ private fun RegistroContenido(
     onAccion: (RegistroAccion) -> Unit,
     onVolverLoginClick: () -> Unit
 ) {
+    val scrollState = rememberScrollState()
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = Neutro0
@@ -83,7 +85,8 @@ private fun RegistroContenido(
                 .fillMaxSize()
                 .padding(padding)
                 .imePadding()
-                .padding(start = 24.dp, end = 24.dp, top = 36.dp, bottom = 32.dp)
+                .verticalScroll(scrollState)
+                .padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 32.dp)
         ) {
             FormularioRegistro(
                 estado = estado,

@@ -56,7 +56,6 @@ class AuthViewModel(
         private set
     var introVista by mutableStateOf(false)
         private set
-
     fun marcarIntroVista() {
         introVista = true
     }
@@ -130,7 +129,7 @@ class AuthViewModel(
 
     fun registrarUsuario() {
         //validamos que los campos no esten vacios
-        if (nombre.isBlank() || apellido.isBlank() || email.isBlank() || contrasena.isBlank() || confirmarContrasena.isBlank()) {
+        if (nombre.isBlank() || email.isBlank() || contrasena.isBlank() || confirmarContrasena.isBlank()) {
             errorMensaje = "Por favor completa todos los campos obligatorios."
             return
         }
