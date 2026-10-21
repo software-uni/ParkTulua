@@ -1,4 +1,4 @@
-package com.univalle.parqueaderoapp.ui.components.inputs
+package com.univalle.parqueaderoapp.ui.shared.inputs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +10,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -21,7 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import co.parktulua.core.designsystem.Acento
 import co.parktulua.core.designsystem.Disponible
 import co.parktulua.core.designsystem.Lleno
 import co.parktulua.core.designsystem.Neutro600
