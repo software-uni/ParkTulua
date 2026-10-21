@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "888285203701-9od217nq4b6up30b6autt8cmg2v631gg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.univalle.parqueaderoapp",
+            "certificate_hash": "682b1c83c98f3ba788bb161a9c20ea9ccf8b9c42"
+          }
+        },
+        {
           "client_id": "888285203701-v26tl6ugl8sirr5qfs0rfiggnaghsrll.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -1,4 +1,4 @@
-package com.univalle.parqueaderoapp.ui.screens
+package com.univalle.parqueaderoapp.ui.auth.screen
 
 import android.util.Log
 import android.widget.Toast
@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.    ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +45,13 @@ import com.univalle.parqueaderoapp.ui.componet.logo.MarcaSplash
 import com.univalle.parqueaderoapp.ui.componet.logo.MarcaSuperior
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.setValue
-
+import androidx.compose.ui.res.stringResource
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.saveable.rememberSaveable
 
 private val SUBIR_MARCA = 120.dp
 
@@ -55,12 +60,15 @@ fun LoginScreen(
     viewModel: AuthViewModel,
     onIniciarSesionClick: () -> Unit,
     onCrearCuenta: () -> Unit,
+
     onIniciarInvitado: () -> Unit
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
 
-    var mostrarFormulario by remember { mutableStateOf(false) }
+    var mostrarFormulario by rememberSaveable { mutableStateOf(false) }
+    val webClientId = stringResource(R.string.default_web_client_id)
 
     //LAUNCHEDEFFECTS (Notificaciones)
 
@@ -91,10 +99,13 @@ fun LoginScreen(
 
     val progreso by animateLottieCompositionAsState(
         composition = composition,
-        iterations = 1
+        iterations = 1,
+        isPlaying = !viewModel.introVista
     )
-
-    val animacionFinalizo = progreso == 1f
+    LaunchedEffect(progreso) {
+        if (progreso == 1f) viewModel.marcarIntroVista()
+    }
+    val animacionFinalizo = viewModel.introVista || progreso == 1f
 
     Box(
         modifier = Modifier
@@ -109,12 +120,16 @@ fun LoginScreen(
             )
     ) {
 
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .imePadding()
+            .verticalScroll(scrollState)
+        ) {
             Spacer(modifier = Modifier.height(40.dp))
 
             LottieAnimation(
                 composition = composition,
-                progress = { progreso },
+                progress = { if (viewModel.introVista) 1f else progreso },
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
@@ -150,7 +165,8 @@ fun LoginScreen(
 
                                 val googleIdOption = GetGoogleIdOption.Builder()
                                     .setFilterByAuthorizedAccounts(false)
-                                    .setServerClientId("888285203701-2gh4l69mauuca89s2q8045ejrii0vrsu.apps.googleusercontent.com")
+                                    .setServerClientId(webClientId)
+                                    //.setServerClientId("888285203701-2gh4l69mauuca89s2q8045ejrii0vrsu.apps.googleusercontent.com")
                                     .setAutoSelectEnabled(true)
                                     .build()
 
@@ -200,6 +216,9 @@ fun LoginScreen(
             enter = fadeIn(animationSpec = tween(durationMillis = 400)),
         ) {
             MarcaSuperior()
+        }
+        BackHandler(enabled = mostrarFormulario) {
+            mostrarFormulario = false
         }
     }
 }

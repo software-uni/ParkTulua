@@ -22,11 +22,12 @@ fun BotonPrincipal(
     texto: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     val forma = RoundedCornerShape(16.dp)
     Surface(
         onClick = onClick,
-        // Sombra morada del Figma (0, 8, blur 20, 35 % de opacidad)
+        enabled = enabled,
         modifier = modifier
             .fillMaxWidth()
             .shadow(

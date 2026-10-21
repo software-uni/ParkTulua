@@ -8,4 +8,8 @@ interface AuthRepository {
     suspend fun registrarConCorreo(email: String, contrasena: String, nombre: String): Result<Boolean>
 
     suspend fun recuperarPassword(email: String): Result<Unit>
+    suspend fun reenviarVerificacion(): Result<Unit>
+    suspend fun verificarCorreo(): Result<Boolean>
+    fun uidActual(): String?
+    fun cerrarSesion()
 }
