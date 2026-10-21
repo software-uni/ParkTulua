@@ -107,4 +107,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     // Seguridad: Almacenamiento local cifrado
     implementation("androidx.security:security-crypto:1.1.0")
+
+    // Koin para Inyección de Dependencias en Jetpack Compose
+    implementation("io.insert-koin:koin-androidx-compose:3.5.6")
 }
