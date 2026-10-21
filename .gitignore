@@ -1,15 +1,27 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# Android Studio / IntelliJ IDEA
+.idea/
+
+# Gradle
+.gradle/
+
+# Configuración local del SDK
 local.properties
+
+# Archivos de compilación
+build/
+**/build/
+
+# Archivos generados por Android NDK / CMake
+.externalNativeBuild/
+.cxx/
+
+# Archivos de captura
+captures/
+
+# Archivos de IntelliJ
+*.iml
+
+# Sistema operativo
+.DS_Store
+
+app/google-services.json
