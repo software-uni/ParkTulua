@@ -70,7 +70,7 @@ class AuthViewModel(
             val resultado = repository.iniciarSesionConGoogle(idToken)
             resultado.onSuccess {
                 // ¡Éxito! Aquí navegaremos a la pantalla del mapa después
-                errorMensaje = "¡Éxito! Entraste con Google."
+                mensajeExito = "¡Éxito! Entraste con Google."
             }.onFailure { excepcion ->
                 errorMensaje = excepcion.localizedMessage ?: "Error con Google"
             }
@@ -143,7 +143,7 @@ class AuthViewModel(
             errorMensaje = null
             val resultado = repository.iniciarSesionInvitado()
             resultado.onSuccess {
-                mensajeExito = "Exitor Entraste como invitado"
+                mensajeExito = "¡Éxito! Entraste como invitado."
             }.onFailure { exception ->
                 errorMensaje = exception.localizedMessage ?: "Error al entrar como invitado "
             }

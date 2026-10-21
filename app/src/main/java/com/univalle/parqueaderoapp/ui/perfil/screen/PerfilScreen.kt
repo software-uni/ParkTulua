@@ -30,6 +30,7 @@ fun PerfilScreen(
             EncabezadoPerfil(
                 nombreCompleto = estado.nombre,
                 correo = estado.correo,
+                fotoUrl = estado.fotoUrl,
                 onEditarClick = { onAccion(PerfilAccion.EditarPerfilClick) },
                 onCerrarSesionClick = { onAccion(PerfilAccion.CerrarSesionClick) }
             )

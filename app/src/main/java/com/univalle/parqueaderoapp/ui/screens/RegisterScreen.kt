@@ -37,6 +37,7 @@ import co.parktulua.core.designsystem.Neutro0
 import co.parktulua.core.designsystem.PrimarioOscuro
 import com.univalle.parqueaderoapp.ui.components.card.FormularioRegistro
 import com.univalle.parqueaderoapp.ui.componet.logo.MarcaSuperior
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 @Composable
@@ -46,6 +47,21 @@ fun RegistroScreen(
 ){
     val context = LocalContext.current
     var aceptaTerminos by remember { mutableStateOf(false) }
+
+    LaunchedEffect(viewModel.errorMensaje) {
+        viewModel.errorMensaje?.let { error ->
+            Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+            viewModel.limpiarError()
+        }
+    }
+
+    LaunchedEffect(viewModel.mensajeExito) {
+        viewModel.mensajeExito?.let { exito ->
+            Toast.makeText(context, exito, Toast.LENGTH_LONG).show()
+            viewModel.limpiarExito()
+            onVolverLoginClick()
+        }
+    }
 
     Box(
         modifier = Modifier

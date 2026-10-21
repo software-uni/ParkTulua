@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.height
@@ -33,10 +34,14 @@ import co.parktulua.core.designsystem.Neutro900
 import co.parktulua.core.designsystem.Primario
 import co.parktulua.core.designsystem.PrimarioClaro
 
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
+
 @Composable
 fun EncabezadoPerfil(
     nombreCompleto: String,
     correo: String,
+    fotoUrl: String? = null,
     onEditarClick: () -> Unit,
     onCerrarSesionClick: () -> Unit
 ) {
@@ -46,7 +51,7 @@ fun EncabezadoPerfil(
             .padding(vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // --- 1. AVATAR CON INICIALES ---
+        // --- 1. AVATAR CON FOTO O INICIALES ---
         Box(
             modifier = Modifier
                 .size(90.dp)
@@ -54,12 +59,23 @@ fun EncabezadoPerfil(
                 .background(PrimarioClaro),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = obtenerIniciales(nombreCompleto),
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                color = Primario // Morado principal
-            )
+            if (!fotoUrl.isNullOrBlank()) {
+                AsyncImage(
+                    model = fotoUrl,
+                    contentDescription = "Foto de perfil",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape)
+                )
+            } else {
+                Text(
+                    text = obtenerIniciales(nombreCompleto),
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Primario // Morado principal
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))

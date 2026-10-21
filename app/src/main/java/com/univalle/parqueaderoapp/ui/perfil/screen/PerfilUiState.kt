@@ -9,6 +9,7 @@ data class PerfilUiState(
     val isLoading: Boolean = true,
     val nombre: String = "",
     val correo: String = "",
+    val fotoUrl: String? = null,
     val vehiculos: List<VehiculoUiModel> = emptyList(),
     val errorMensaje: String? = null
 ){
