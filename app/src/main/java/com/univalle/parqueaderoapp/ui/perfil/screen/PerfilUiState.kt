@@ -24,4 +24,10 @@ sealed class PerfilAccion {
     object CerrarSesionClick : PerfilAccion()
     object AgregarVehiculoClick : PerfilAccion()
     object RecargarDatos : PerfilAccion()
+
+    data class GuardarCambiosPerfil(
+        val nuevoNombre: String,
+        val fotoBytes: ByteArray? = null
+    ) : PerfilAccion()
+
 }

@@ -36,6 +36,7 @@ import co.parktulua.core.designsystem.PrimarioClaro
 
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 
 @Composable
 fun EncabezadoPerfil(
@@ -60,13 +61,14 @@ fun EncabezadoPerfil(
             contentAlignment = Alignment.Center
         ) {
             if (!fotoUrl.isNullOrBlank()) {
-                AsyncImage(
+                SubcomposeAsyncImage(
                     model = fotoUrl,
                     contentDescription = "Foto de perfil",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(CircleShape)
+                        .clip(CircleShape),
+                    error = { InicialesAvatar(nombreCompleto) }
                 )
             } else {
                 Text(
@@ -139,4 +141,13 @@ private fun obtenerIniciales(nombre: String): String {
         1 -> palabras[0].take(2).uppercase()
         else -> "${palabras[0].first()}${palabras[1].first()}".uppercase()
     }
+}
+@Composable
+private fun InicialesAvatar(nombre: String) {
+    Text(
+        text = obtenerIniciales(nombre),
+        fontSize = 32.sp,
+        fontWeight = FontWeight.Bold,
+        color = Primario
+    )
 }

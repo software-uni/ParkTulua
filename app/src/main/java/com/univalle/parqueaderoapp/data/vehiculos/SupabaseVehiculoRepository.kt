@@ -62,6 +62,8 @@ class SupabaseVehiculoRepository(
                     }
                     Result.success(vehiculos)
                 }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Result.failure(e)
             }

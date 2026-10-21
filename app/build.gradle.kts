@@ -38,6 +38,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val supabaseUrl = localProperties.getProperty("SUPABASE_URL") ?: "https://vphjvtrjmhmdhozxhtww.supabase.co"
+        val supabaseAnonKey = localProperties.getProperty("SUPABASE_ANON_KEY") ?: "sb_publishable_NBhhVLFjOwApp8Jg8njLiA__6hTpgza"
+
+        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"$supabaseAnonKey\"")
     }
 
     buildTypes {
@@ -56,6 +62,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

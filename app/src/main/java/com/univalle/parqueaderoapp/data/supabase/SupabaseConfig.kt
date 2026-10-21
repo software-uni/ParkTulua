@@ -1,8 +1,8 @@
 package com.univalle.parqueaderoapp.data.supabase
 
 object SupabaseConfig {
-    const val URL = "https://vphjvtrjmhmdhozxhtww.supabase.co"
-    const val ANON_KEY = "sb_publishable_NBhhVLFjOwApp8Jg8njLiA__6hTpgza"
+    val URL: String = com.univalle.parqueaderoapp.BuildConfig.SUPABASE_URL
+    val ANON_KEY: String = com.univalle.parqueaderoapp.BuildConfig.SUPABASE_ANON_KEY
 
-    const val REST_URL = "$URL/rest/v1"
+    val REST_URL: String = "$URL/rest/v1"
 }

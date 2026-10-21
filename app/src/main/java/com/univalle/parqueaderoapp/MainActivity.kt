@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.univalle.parqueaderoapp.core.network.NetworkConnectivityObserver
+import com.univalle.parqueaderoapp.core.network.crearCargadorImagenes
 import com.univalle.parqueaderoapp.data.auth.FirebaseAuthRepository
 import com.univalle.parqueaderoapp.data.usuario.ConfiguracionSupabase
 import com.univalle.parqueaderoapp.data.usuario.FotoPerfilLocal
@@ -41,6 +42,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //
         enableEdgeToEdge()
+        coil.Coil.setImageLoader(crearCargadorImagenes(applicationContext, firebaseAuth))
         setContent {
             val authViewModel: AuthViewModel = viewModel(
                 factory = AuthViewModelFactory(authRepository, usuarioRepository, fotoLocal)
