@@ -12,6 +12,8 @@ import androidx.lifecycle.viewModelScope
 import com.univalle.parqueaderoapp.data.auth.AuthRepository
 import com.univalle.parqueaderoapp.data.usuario.FotoPerfilLocal
 import com.univalle.parqueaderoapp.data.usuario.UsuarioRepository
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
@@ -59,6 +61,9 @@ class AuthViewModel(
     fun marcarIntroVista() {
         introVista = true
     }
+    // Evento de una sola vez: la pantalla la recive y la navega al mapa
+    private val _irAlMapa = Channel<Unit>(Channel.BUFFERED)
+    val irAlMapa = _irAlMapa.receiveAsFlow()
 
     fun onFotoChange(nuevaUri: Uri?) {
         fotoUri = nuevaUri
@@ -230,6 +235,7 @@ class AuthViewModel(
                         if (verificado) {
                             sincronizarConSupabase()
                             mensajeExito = "¡Éxito! Sesión iniciada."
+                            _irAlMapa.trySend(Unit)
                         } else {
                             requiereVerificacion = true
                         }
@@ -246,6 +252,7 @@ class AuthViewModel(
                 // ¡Éxito! Aquí navegaremos a la pantalla del mapa después
                 sincronizarConSupabase()
                 mensajeExito = "¡Éxito! Entraste con Google."
+                _irAlMapa.trySend(Unit)
             }.onFailure { excepcion ->
                 errorMensaje = excepcion.localizedMessage ?: "Error con Google"
             }
@@ -259,6 +266,7 @@ class AuthViewModel(
             val resultado = repository.iniciarSesionInvitado()
             resultado.onSuccess {
                 mensajeExito = "Exitor Entraste como invitado"
+                _irAlMapa.trySend(Unit)
             }.onFailure { exception ->
                 errorMensaje = exception.localizedMessage ?: "Error al entrar como invitado "
             }

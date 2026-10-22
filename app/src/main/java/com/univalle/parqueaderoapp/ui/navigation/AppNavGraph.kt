@@ -9,16 +9,30 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.univalle.parqueaderoapp.ui.auth.screen.LoginScreen
 import com.univalle.parqueaderoapp.ui.auth.screen.VerificacionScreen
+import com.univalle.parqueaderoapp.ui.mapa.MapaScreen
 
 
 object AppScreens{
     const val LOGIN_SCREEN = "login_screen"
     const val REGISTRO_SCREEN = "registro_screen"
     const val VERIFICACION_SCREEN = "verificacion_screen"
+    const val MAPA_SCREEN = "mapa_screen"
 }
 @Composable
 fun AppNavGraph(authViewModel: AuthViewModel){
     val navController = rememberNavController()
+
+    // popUpTo evita que el botón de atras regrese al login
+    val irAlMapa: () -> Unit = {
+        navController.navigate(AppScreens.MAPA_SCREEN) {
+            popUpTo(AppScreens.LOGIN_SCREEN) { inclusive = true }
+            launchSingleTop = true
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        authViewModel.irAlMapa.collect { irAlMapa() }
+    }
 
     LaunchedEffect(authViewModel.requiereVerificacion) {
         if (authViewModel.requiereVerificacion) {
@@ -62,10 +76,12 @@ fun AppNavGraph(authViewModel: AuthViewModel){
                 onVolverLoginClick = {
                     navController.popBackStack(AppScreens.LOGIN_SCREEN, inclusive = false)
                 },
-                onContinuarClick = {
-
-                }
+                onContinuarClick = irAlMapa
             )
+        }
+
+        composable(AppScreens.MAPA_SCREEN) {
+            MapaScreen()
         }
     }
 

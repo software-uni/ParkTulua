@@ -165,7 +165,6 @@ fun LoginScreen(
                                 val googleIdOption = GetGoogleIdOption.Builder()
                                     .setFilterByAuthorizedAccounts(false)
                                     .setServerClientId(webClientId)
-                                    //.setServerClientId("888285203701-2gh4l69mauuca89s2q8045ejrii0vrsu.apps.googleusercontent.com")
                                     .setAutoSelectEnabled(true)
                                     .build()
 

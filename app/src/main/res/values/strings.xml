@@ -9,4 +9,5 @@
     <string name="login_invitado">Ingresar como invitado  →</string>
     <string name="marca_nombre">Park Tuluá</string>
     <string name="marca_lema">Tu cupo, sin vueltas</string>
+    <string name="mapa_titulo">Mapa</string>
 </resources>
