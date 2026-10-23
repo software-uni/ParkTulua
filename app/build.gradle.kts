@@ -96,4 +96,10 @@ dependencies {
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     // Seguridad: Almacenamiento local cifrado
     implementation("androidx.security:security-crypto:1.1.0")
+
+    // Libreria principal MapLibre Compose
+    implementation(libs.maplibre.compose)
+    // Renderizador vulkan obligatorio pejecutar Android
+    runtimeOnly(libs.maplibre.compose.runtime.vulkan)
+    implementation(libs.play.services.location)
 }
