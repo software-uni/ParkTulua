@@ -1,17 +1,16 @@
 package com.univalle.parqueaderoapp.ui.navigation
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.univalle.parqueaderoapp.data.supabase.SupabaseConfig
-import com.univalle.parqueaderoapp.data.usuario.SupabaseUsuarioRepository
-import com.univalle.parqueaderoapp.data.vehiculos.SupabaseVehiculoRepository
 import com.univalle.parqueaderoapp.ui.auth.screen.AuthViewModel
 import com.univalle.parqueaderoapp.ui.auth.screen.LoginScreen
 import com.univalle.parqueaderoapp.ui.auth.screen.RegistroScreen
@@ -20,11 +19,7 @@ import com.univalle.parqueaderoapp.ui.perfil.screen.EditarPerfilScreen
 import com.univalle.parqueaderoapp.ui.perfil.screen.PerfilAccion
 import com.univalle.parqueaderoapp.ui.perfil.screen.PerfilScreen
 import com.univalle.parqueaderoapp.ui.perfil.screen.PerfilViewModel
-import com.univalle.parqueaderoapp.ui.perfil.screen.PerfilViewModelFactory
-import okhttp3.OkHttpClient
-
-import androidx.compose.runtime.remember
-import java.util.concurrent.TimeUnit
+import org.koin.androidx.compose.koinViewModel
 
 object AppScreens {
     const val LOGIN_SCREEN = "login_screen"
@@ -35,17 +30,10 @@ object AppScreens {
 }
 
 @Composable
-fun AppNavGraph(authViewModel: AuthViewModel) {
+fun AppNavGraph(authViewModel: AuthViewModel = koinViewModel()) {
     val navController = rememberNavController()
     val contexto = androidx.compose.ui.platform.LocalContext.current
-
     val firebaseAuth = remember { FirebaseAuth.getInstance() }
-    val okHttpClient = remember {
-        OkHttpClient.Builder()
-            .connectTimeout(20, TimeUnit.SECONDS)
-            .readTimeout(20, TimeUnit.SECONDS)
-            .build()
-    }
 
     LaunchedEffect(authViewModel.requiereVerificacion) {
         if (authViewModel.requiereVerificacion) {
@@ -101,31 +89,22 @@ fun AppNavGraph(authViewModel: AuthViewModel) {
             )
         }
 
-        composable(AppScreens.PERFIL_SCREEN) { backStackEntry ->
-            val vehiculoRepository = remember {
-                SupabaseVehiculoRepository(
-                    auth = firebaseAuth,
-                    cliente = okHttpClient
-                )
+        composable(
+            AppScreens.PERFIL_SCREEN,
+            enterTransition = {
+                slideInHorizontally(initialOffsetX = { it })
+            },
+            exitTransition = {
+                slideOutHorizontally(targetOffsetX = { -it })
+            },
+            popEnterTransition = {
+                slideInHorizontally(initialOffsetX = { -it })
+            },
+            popExitTransition = {
+                slideOutHorizontally(targetOffsetX = { it })
             }
-
-            val usuarioRepository = remember {
-                SupabaseUsuarioRepository(
-                    auth = firebaseAuth,
-                    cliente = okHttpClient,
-                    urlFuncion = "${SupabaseConfig.URL}/functions/v1/sincronizar_usuario"
-                )
-            }
-
-            val perfilViewModel: PerfilViewModel = viewModel(
-                viewModelStoreOwner = backStackEntry,
-                factory = PerfilViewModelFactory(
-                    auth = firebaseAuth,
-                    vehiculoRepository = vehiculoRepository,
-                    usuarioRepository = usuarioRepository
-                )
-            )
-
+        ) { backStackEntry ->
+            val perfilViewModel: PerfilViewModel = koinViewModel(viewModelStoreOwner = backStackEntry)
             val estado by perfilViewModel.uiState.collectAsState()
 
             PerfilScreen(
@@ -152,22 +131,7 @@ fun AppNavGraph(authViewModel: AuthViewModel) {
             val parentEntry = remember(backStackEntry) {
                 navController.getBackStackEntry(AppScreens.PERFIL_SCREEN)
             }
-
-            val perfilViewModel: PerfilViewModel = viewModel(
-                viewModelStoreOwner = parentEntry,
-                factory = PerfilViewModelFactory(
-                    auth = firebaseAuth,
-                    vehiculoRepository = SupabaseVehiculoRepository(
-                        auth = firebaseAuth,
-                        cliente = okHttpClient
-                    ),
-                    usuarioRepository = SupabaseUsuarioRepository(
-                        auth = firebaseAuth,
-                        cliente = okHttpClient,
-                        urlFuncion = "${SupabaseConfig.URL}/functions/v1/sincronizar_usuario"
-                    )
-                )
-            )
+            val perfilViewModel: PerfilViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
             val estado by perfilViewModel.uiState.collectAsState()
 
             EditarPerfilScreen(
@@ -175,7 +139,6 @@ fun AppNavGraph(authViewModel: AuthViewModel) {
                 correoActual = estado.correo,
                 fotoUrlActual = estado.fotoUrl,
                 onGuardarClick = { nuevoNombre, nuevaFotoUri ->
-
                     val fotoBytes = nuevaFotoUri?.let { uri ->
                         contexto.contentResolver.openInputStream(uri)?.use { it.readBytes() }
                     }

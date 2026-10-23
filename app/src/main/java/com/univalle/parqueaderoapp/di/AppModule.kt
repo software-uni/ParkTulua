@@ -1,9 +1,9 @@
 package com.univalle.parqueaderoapp.di
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
 import com.univalle.parqueaderoapp.data.auth.AuthRepository
 import com.univalle.parqueaderoapp.data.auth.FirebaseAuthRepository
-import com.univalle.parqueaderoapp.data.supabase.SupabaseConfig
 import com.univalle.parqueaderoapp.data.usuario.FotoPerfilLocal
 import com.univalle.parqueaderoapp.data.usuario.SupabaseUsuarioRepository
 import com.univalle.parqueaderoapp.data.usuario.UsuarioRepository
@@ -28,15 +28,16 @@ val appModule = module {
             .build()
     }
     single { FotoPerfilLocal(androidContext()) }
+    single { Gson() }
 
     // --- Repositorios ---
     single<AuthRepository> { FirebaseAuthRepository(get()) }
-    single<VehiculoRepository> { SupabaseVehiculoRepository(get(), get()) }
+    single<VehiculoRepository> { SupabaseVehiculoRepository(get(), get(), get()) }
     single<UsuarioRepository> {
         SupabaseUsuarioRepository(
             auth = get(),
             cliente = get(),
-            urlFuncion = "${SupabaseConfig.URL}/functions/v1/sincronizar_usuario"
+            gson = get()
         )
     }
 

@@ -15,12 +15,11 @@ import okio.IOException
 class SupabaseVehiculoRepository(
     private val auth: FirebaseAuth,
     private val cliente: OkHttpClient,
+    private val gson: Gson
 ) : VehiculoRepository {
 
-    private val gson = Gson()
 
-    override suspend fun obtenerVehiculosUsuario(): Result<List<VehiculoEntity>> =
-        withContext(Dispatchers.IO) {
+    override suspend fun obtenerVehiculosUsuario(): Result<List<VehiculoEntity>> = withContext(Dispatchers.IO) {
             Log.d("Supabase", "1. Función llamada")
             val usuario = auth.currentUser
                 ?: return@withContext Result.failure(IllegalStateException("No hay sesion activa"))

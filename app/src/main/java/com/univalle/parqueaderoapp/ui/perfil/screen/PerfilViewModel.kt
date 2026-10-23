@@ -2,11 +2,9 @@ package com.univalle.parqueaderoapp.ui.perfil.screen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.univalle.parqueaderoapp.data.supabase.SupabaseConfig
 import com.univalle.parqueaderoapp.data.usuario.UsuarioRepository
 import com.univalle.parqueaderoapp.data.usuario.UsuarioUpdateDto
 import com.univalle.parqueaderoapp.data.vehiculos.VehiculoRepository
@@ -17,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import okhttp3.internal.notify
+
 
 class PerfilViewModel(
     private val auth: FirebaseAuth,
@@ -49,7 +47,9 @@ class PerfilViewModel(
     }
     private fun guardarCambiosPerfil(nuevoNombre: String, fotoBytes: ByteArray?){
         viewModelScope.launch {
-            _uiState.update { it.copy(nombre = nuevoNombre) }
+            _uiState.update { it.copy(isLoading = true, errorMensaje = null) }
+
+            var huboError = false
 
             // 1. Actualizamos Firebase Auth
             try {
@@ -69,14 +69,18 @@ class PerfilViewModel(
 
             var falloFoto = false
             if (fotoBytes != null) {
-                val resultadoFoto = usuarioRepository.sincronizarUsuario(fotoBytes)
+                val resultadoFoto = usuarioRepository.actualizarFotoPerfil(fotoBytes)
                 if (resultadoFoto.isFailure) falloFoto = true
             }
 
-            if (resultadoNombre.isFailure || falloFoto) {
+            if (huboError) {
                 _uiState.update {
-                    it.copy(errorMensaje = "Hubo un problema al guardar algunos cambios. Intenta de nuevo.")
+                    it.copy(
+                        isLoading = false,
+                        errorMensaje = "Hubo un problema al guardar algunos cambios. Intenta de nuevo."
+                    )
                 }
+                cargarDatos()
             } else {
                 cargarDatos()
             }
@@ -84,12 +88,15 @@ class PerfilViewModel(
     }
     private fun cargarDatos() {
         viewModelScope.launch {
-            val usuarioActual = auth.currentUser
 
+            _uiState.update { it.copy(isLoading = true, errorMensaje = null) }
+
+            val usuarioActual = auth.currentUser
             val correoReal = usuarioActual?.email ?: ""
             val displayName = usuarioActual?.displayName
-            val uid = usuarioActual?.uid
-            val fotoUrlReal = uid?.let { usuarioRepository.obtenerUrlFotoPerfil(it) }
+
+            val fotoUrlReal = usuarioRepository.obtenerRutaFotoPerfil().getOrNull()
+                ?.let { usuarioRepository.urlFotoPerfil(it) }
 
             val nombreReal = when {
                 !displayName.isNullOrBlank() -> displayName
@@ -100,11 +107,9 @@ class PerfilViewModel(
 
             _uiState.update {
                 it.copy(
-                    isLoading = true,
                     nombre = nombreReal,
                     correo = correoReal,
                     fotoUrl = fotoUrlReal,
-                    errorMensaje = null
                 )
             }
 
@@ -137,18 +142,5 @@ class PerfilViewModel(
                 }
             }
         }
-    }
-}
-class PerfilViewModelFactory(
-    private val auth: FirebaseAuth,
-    private val vehiculoRepository: VehiculoRepository,
-    private val usuarioRepository: UsuarioRepository
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(PerfilViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return PerfilViewModel(auth, vehiculoRepository, usuarioRepository ) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

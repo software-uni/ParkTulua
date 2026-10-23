@@ -1,5 +1,6 @@
 package com.univalle.parqueaderoapp.ui.perfil.screen.componet
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,9 +12,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.TwoWheeler
 import androidx.compose.material3.Button
@@ -21,15 +24,19 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import co.parktulua.core.designsystem.Acento
 import co.parktulua.core.designsystem.BordeSuave
 import co.parktulua.core.designsystem.FondoApp
 import co.parktulua.core.designsystem.Neutro0
@@ -46,13 +53,13 @@ fun ListaVehiculos(
     cantidad: Int,
     mostrarEstadoVacio: Boolean,
     onAgregarVehiculoClick: () -> Unit
-){
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp)
     ) {
-        Row (
+        Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -61,8 +68,9 @@ fun ListaVehiculos(
                 text = "Mis vehículos",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Neutro900
+                color = Neutro600
             )
+
             // Pequeño badge con el número total de vehículos
             Box(
                 modifier = Modifier
@@ -74,7 +82,7 @@ fun ListaVehiculos(
                     text = "$cantidad",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Primario
+                    color = Acento
                 )
             }
         }
@@ -91,29 +99,33 @@ fun ListaVehiculos(
             Spacer(modifier = Modifier.height(24.dp))
             OutlinedButton(
                 onClick = onAgregarVehiculoClick,
-                modifier = Modifier.fillMaxWidth().height(48.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                border = BorderStroke(1.dp, Primario)
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
-                    tint = Primario // <-- Cambio aquí (opcional, para que el icono tome el color principal)
+                    tint = Primario
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "Agregar otro vehículo",
-                    color = Primario // <-- Cambio aquí
+                    color = Primario
                 )
             }
         }
     }
 }
+
 @Composable
 private fun TarjetaVehiculo(vehiculo: VehiculoUiModel) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = FondoApp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        shape = RoundedCornerShape(12.dp)
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.5.dp),
+        shape = RoundedCornerShape(16.dp)
     ) {
         Row(
             modifier = Modifier
@@ -131,7 +143,7 @@ private fun TarjetaVehiculo(vehiculo: VehiculoUiModel) {
             Box(
                 modifier = Modifier
                     .size(48.dp)
-                    .background(Neutro0, shape = RoundedCornerShape(8.dp)),
+                    .background(PrimarioClaro, shape = CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -143,7 +155,9 @@ private fun TarjetaVehiculo(vehiculo: VehiculoUiModel) {
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            Column {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(
                     text = vehiculo.placa.uppercase(),
                     fontWeight = FontWeight.Bold,
@@ -156,9 +170,18 @@ private fun TarjetaVehiculo(vehiculo: VehiculoUiModel) {
                     color = Neutro600
                 )
             }
+            IconButton(onClick = { /* TODO: Implementar lógica para quitar vehículo */ }) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Quitar vehículo",
+                    tint = Neutro600
+                )
+            }
         }
     }
 }
+
+
 @Composable
 private fun EstadoVacioVehiculos(onAgregarVehiculoClick: () -> Unit) {
     Column(
@@ -171,7 +194,7 @@ private fun EstadoVacioVehiculos(onAgregarVehiculoClick: () -> Unit) {
             imageVector = Icons.Default.DirectionsCar,
             contentDescription = "Cero vehículos",
             modifier = Modifier.size(64.dp),
-            tint = BordeSuave // <-- Cambio aquí
+            tint = BordeSuave
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(

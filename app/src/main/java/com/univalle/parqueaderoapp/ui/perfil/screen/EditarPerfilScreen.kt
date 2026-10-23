@@ -43,6 +43,8 @@ import androidx.compose.ui.unit.sp
 import co.parktulua.core.designsystem.FondoApp
 import co.parktulua.core.designsystem.Neutro600
 import co.parktulua.core.designsystem.Neutro900
+import co.parktulua.core.designsystem.Primario
+import co.parktulua.core.designsystem.PrimarioOscuro
 import com.univalle.parqueaderoapp.ui.componet.botones.botones.BotonPrincipal
 import com.univalle.parqueaderoapp.ui.perfil.screen.componet.DialogoEliminarCuenta
 import com.univalle.parqueaderoapp.ui.perfil.screen.componet.SelectorFotoPerfil
@@ -73,13 +75,13 @@ fun EditarPerfilScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Editar perfil", fontWeight = FontWeight.Bold, color = Neutro900) },
+                title = { Text("Editar perfil", fontWeight = FontWeight.Bold, color = PrimarioOscuro) },
                 navigationIcon = {
                     IconButton(onClick = onVolverClick) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Volver",
-                            tint = Neutro900
+                            tint = PrimarioOscuro
                         )
                     }
                 },
