@@ -103,7 +103,7 @@ fun EncabezadoPerfil(
                 )
                 Text(
                     text = correo.ifBlank { "Sin correo registrado" },
-                    fontSize = 13.sp,
+                    fontSize = 11.sp,
                     color = Neutro600,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

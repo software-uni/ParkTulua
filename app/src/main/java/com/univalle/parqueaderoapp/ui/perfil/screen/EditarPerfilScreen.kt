@@ -1,28 +1,27 @@
 package com.univalle.parqueaderoapp.ui.perfil.screen
 
 import android.net.Uri
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -35,51 +34,46 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import co.parktulua.core.designsystem.BordeSuave
 import co.parktulua.core.designsystem.FondoApp
+import co.parktulua.core.designsystem.LlenoTexto
+import co.parktulua.core.designsystem.Neutro100
 import co.parktulua.core.designsystem.Neutro600
 import co.parktulua.core.designsystem.Neutro900
 import co.parktulua.core.designsystem.Primario
 import co.parktulua.core.designsystem.PrimarioOscuro
-import com.univalle.parqueaderoapp.ui.componet.botones.botones.BotonPrincipal
-import com.univalle.parqueaderoapp.ui.perfil.screen.componet.DialogoEliminarCuenta
 import com.univalle.parqueaderoapp.ui.perfil.screen.componet.SelectorFotoPerfil
-import com.univalle.parqueaderoapp.ui.shared.inputs.CampoTextoParqueadero
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditarPerfilScreen(
     nombreActual: String,
     correoActual: String,
-    fotoUrlActual: String? = null,
-    onGuardarClick: (nuevoNombre: String, nuevaFotoUri: Uri?) -> Unit,
-    onVolverClick: () -> Unit,
-    onEliminarCuentaClick: () -> Unit = {}
+    fotoUrlActual: String?,
+    onGuardarClick: (String, Uri?) -> Unit,
+    onEliminarCuentaClick: () -> Unit,
+    onVolverClick: () -> Unit
 ) {
-    val (nombresInicial, apellidosInicial) = remember(nombreActual) { separarNombre(nombreActual) }
-    var nombres by remember(nombreActual) { mutableStateOf(nombresInicial) }
-    var apellidos by remember(nombreActual) { mutableStateOf(apellidosInicial) }
+    // Lógica simple para dividir el nombre actual en Nombres y Apellidos
+    val partesNombre = nombreActual.split(" ", limit = 2)
+    var nombres by remember { mutableStateOf(partesNombre.getOrNull(0) ?: "") }
+    var apellidos by remember { mutableStateOf(partesNombre.getOrNull(1) ?: "") }
     var nuevaFotoUri by remember { mutableStateOf<Uri?>(null) }
-    var mostrarDialogoEliminar by remember { mutableStateOf(false) }
 
-    // Se guarda un solo nombre: nombres y apellidos unidos, sin espacios de más
-    val nombreNuevo = listOf(nombres, apellidos)
-        .map { it.trim() }
-        .filter { it.isNotEmpty() }
-        .joinToString(" ")
+    val scrollState = rememberScrollState()
 
     Scaffold(
+        containerColor = FondoApp,
         topBar = {
             TopAppBar(
                 title = { Text("Editar perfil", fontWeight = FontWeight.Bold, color = PrimarioOscuro) },
                 navigationIcon = {
                     IconButton(onClick = onVolverClick) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Volver",
                             tint = PrimarioOscuro
                         )
@@ -87,114 +81,133 @@ fun EditarPerfilScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = FondoApp)
             )
-        },
-        containerColor = FondoApp
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .imePadding()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(horizontal = 24.dp)
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(24.dp))
+
+
             SelectorFotoPerfil(
                 fotoUrlActual = fotoUrlActual,
                 nuevaFotoUri = nuevaFotoUri,
                 onFotoSeleccionada = { nuevaFotoUri = it }
             )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(
-                        width = 0.5.dp,
-                        color = Neutro600.copy(alpha = 0.4f),
-                        shape = RoundedCornerShape(14.dp)
-                    )
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = "Datos personales",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Neutro600
-                )
+            Spacer(modifier = Modifier.height(32.dp))
 
-                CampoTextoParqueadero(
+            // Formulario
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Campo Nombres
+                CampoTextoPerfil(
                     label = "Nombres",
                     value = nombres,
                     onValueChange = { nombres = it },
-                    placeholder = "Nombre",
-                    iconoIzquierdo = Icons.Default.Person,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    modifier = Modifier.fillMaxWidth()
+                    icono = Icons.Default.Person
                 )
 
-                CampoTextoParqueadero(
+                // Campo Apellidos
+                CampoTextoPerfil(
                     label = "Apellidos",
                     value = apellidos,
                     onValueChange = { apellidos = it },
-                    placeholder = "Apellido",
-                    iconoIzquierdo = Icons.Default.Person,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    modifier = Modifier.fillMaxWidth()
+                    icono = Icons.Default.Person
+                )
+
+                // Campo Correo (Deshabilitado)
+                CampoTextoPerfil(
+                    label = "Correo electrónico (no modificable)",
+                    value = correoActual,
+                    onValueChange = {},
+                    icono = Icons.Default.Email,
+                    habilitado = false
                 )
             }
 
-            // Correo bloqueado
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = "Correo electrónico (no modificable)",
-                    fontSize = 12.sp,
-                    color = Neutro600,
-                    modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White, RoundedCornerShape(12.dp))
-                        .padding(16.dp)
-                ) {
-                    Text(text = correoActual, fontSize = 16.sp, color = Neutro600)
-                }
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Botón Guardar
+            Button(
+                onClick = {
+                    val nombreCompleto = "$nombres $apellidos".trim()
+                    onGuardarClick(nombreCompleto, nuevaFotoUri)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Primario),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(text = "Guardar cambios", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            // Espaciador flexible para empujar el botón de eliminar hacia abajo
+            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            BotonPrincipal(
-                texto = "Guardar cambios",
-                onClick = { onGuardarClick(nombreNuevo, nuevaFotoUri) },
-                enabled = nombres.isNotBlank() &&
-                        (nombreNuevo != nombreActual.trim() || nuevaFotoUri != null)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
+            // Botón Eliminar Cuenta
             TextButton(
-                onClick = { mostrarDialogoEliminar = true },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                onClick = { /* TODO: Mostrar diálogo de confirmación */ },
+                modifier = Modifier.padding(bottom = 24.dp)
             ) {
                 Text(
                     text = "Eliminar cuenta",
-                    color = MaterialTheme.colorScheme.error,
-                    fontWeight = FontWeight.SemiBold
+                    color = LlenoTexto,
+                    fontWeight = FontWeight.Bold
                 )
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
+}
 
-    if (mostrarDialogoEliminar) {
-        DialogoEliminarCuenta(
-            onConfirmar = {
-                mostrarDialogoEliminar = false
-                onEliminarCuentaClick()
+@Composable
+private fun CampoTextoPerfil(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    icono: androidx.compose.ui.graphics.vector.ImageVector,
+    habilitado: Boolean = true
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = label,
+            fontSize = 14.sp,
+            color = if (habilitado) Neutro900 else Neutro600,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
+        )
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            enabled = habilitado,
+            modifier = Modifier.fillMaxWidth(),
+            leadingIcon = {
+                Icon(
+                    imageVector = icono,
+                    contentDescription = null,
+                    tint = if (habilitado) Neutro600 else BordeSuave
+                )
             },
-            onCancelar = { mostrarDialogoEliminar = false }
+            shape = RoundedCornerShape(12.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = BordeSuave,
+                focusedBorderColor = Primario,
+                unfocusedContainerColor = FondoApp,
+                focusedContainerColor = FondoApp,
+                disabledContainerColor = Neutro100,
+                disabledBorderColor = BordeSuave,
+                disabledTextColor = Neutro600
+            ),
+            singleLine = true
         )
     }
 }
