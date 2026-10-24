@@ -11,7 +11,9 @@ object SupabaseConfig {
     val URL_ACTUALIZAR_FOTO: String = "$URL/functions/v1/actualizar-foto"
 
     // Funciones de base de datos (RPC)
-    //Vehiculo
+    //1. Usuario
+    val URL_ELIMINAR_CUENTA : String = "$REST_URL/rpc/eliminar_cuenta"
+    //2. Vehiculo
     val URL_REGISTRAR_VEHICULO: String = "$REST_URL/rpc/registrar_vehiculo"
     val URL_QUITAR_VEHICULO: String = "$REST_URL/rpc/quitar_vehiculo"
 }
