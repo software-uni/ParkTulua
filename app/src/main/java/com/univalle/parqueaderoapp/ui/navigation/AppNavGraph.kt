@@ -5,6 +5,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,6 +39,20 @@ fun AppNavGraph(authViewModel: AuthViewModel = koinViewModel()) {
     val navController = rememberNavController()
     val contexto = androidx.compose.ui.platform.LocalContext.current
     val firebaseAuth = remember { FirebaseAuth.getInstance() }
+
+    DisposableEffect(firebaseAuth) {
+        val oyente = FirebaseAuth.AuthStateListener { auth ->
+            val ruta = navController.currentDestination?.route
+            val enPerfil = ruta == AppScreens.PERFIL_SCREEN || ruta == AppScreens.EDITAR_PERFIL_SCREEN
+            if (auth.currentUser == null && enPerfil) {
+                navController.navigate(AppScreens.LOGIN_SCREEN) {
+                    popUpTo(0) { inclusive = true }
+                }
+            }
+        }
+        firebaseAuth.addAuthStateListener(oyente)
+        onDispose { firebaseAuth.removeAuthStateListener(oyente) }
+    }
 
     LaunchedEffect(authViewModel.requiereVerificacion) {
         if (authViewModel.requiereVerificacion) {
@@ -152,6 +167,9 @@ fun AppNavGraph(authViewModel: AuthViewModel = koinViewModel()) {
                     perfilViewModel.onAccion(PerfilAccion.GuardarCambiosPerfil(nuevoNombre, fotoBytes))
                     navController.popBackStack()
                 },
+                mensajeAccion = estado.mensajeAccion,
+                onMensajeMostrado = { perfilViewModel.onAccion(PerfilAccion.MensajeMostrado) },
+                onEliminarCuentaConfirmado = { perfilViewModel.onAccion(PerfilAccion.EliminarCuentaConfirmado) },
                 onVolverClick = {
                     navController.popBackStack()
                 }

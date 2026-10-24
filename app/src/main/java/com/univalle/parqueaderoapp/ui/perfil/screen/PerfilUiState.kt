@@ -26,6 +26,8 @@ sealed class PerfilAccion {
     object CerrarSesionClick : PerfilAccion()
     object AgregarVehiculoClick : PerfilAccion()
     object RecargarDatos : PerfilAccion()
+    object EliminarCuentaConfirmado : PerfilAccion()
+    object MensajeMostrado : PerfilAccion()
 
     data class QuitarVehiculo(val vehiculoId: String) : PerfilAccion()
     data class GuardarCambiosPerfil(

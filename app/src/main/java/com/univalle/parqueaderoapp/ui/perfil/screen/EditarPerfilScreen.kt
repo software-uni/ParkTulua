@@ -23,11 +23,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +48,7 @@ import co.parktulua.core.designsystem.Neutro600
 import co.parktulua.core.designsystem.Neutro900
 import co.parktulua.core.designsystem.Primario
 import co.parktulua.core.designsystem.PrimarioOscuro
+import com.univalle.parqueaderoapp.ui.perfil.screen.componet.DialogoEliminarCuenta
 import com.univalle.parqueaderoapp.ui.perfil.screen.componet.SelectorFotoPerfil
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,7 +58,9 @@ fun EditarPerfilScreen(
     correoActual: String,
     fotoUrlActual: String?,
     onGuardarClick: (String, Uri?) -> Unit,
-  //      onEliminarCuentaClick: () -> Unit,
+    mensajeAccion: String?,
+    onMensajeMostrado: () -> Unit,
+    onEliminarCuentaConfirmado: () -> Unit,
     onVolverClick: () -> Unit
 ) {
     // Lógica simple para dividir el nombre actual en Nombres y Apellidos
@@ -62,10 +68,20 @@ fun EditarPerfilScreen(
     var nombres by remember { mutableStateOf(partesNombre.getOrNull(0) ?: "") }
     var apellidos by remember { mutableStateOf(partesNombre.getOrNull(1) ?: "") }
     var nuevaFotoUri by remember { mutableStateOf<Uri?>(null) }
+    var mostrarDialogoEliminar by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(mensajeAccion) {
+        mensajeAccion?.let {
+            snackbarHostState.showSnackbar(it)
+            onMensajeMostrado()
+        }
+    }
 
     val scrollState = rememberScrollState()
 
     Scaffold(
+        snackbarHost = {SnackbarHost(snackbarHostState)},
         containerColor = FondoApp,
         topBar = {
             TopAppBar(
@@ -156,7 +172,7 @@ fun EditarPerfilScreen(
 
             // Botón Eliminar Cuenta
             TextButton(
-                onClick = { /* TODO: Mostrar diálogo de confirmación */ },
+                onClick = { mostrarDialogoEliminar = true  },
                 modifier = Modifier.padding(bottom = 24.dp)
             ) {
                 Text(
@@ -166,6 +182,15 @@ fun EditarPerfilScreen(
                 )
             }
         }
+    }
+    if (mostrarDialogoEliminar) {
+        DialogoEliminarCuenta(
+            onConfirmar = {
+                mostrarDialogoEliminar = false
+                onEliminarCuentaConfirmado()
+            },
+            onCancelar = { mostrarDialogoEliminar = false }
+        )
     }
 }
 

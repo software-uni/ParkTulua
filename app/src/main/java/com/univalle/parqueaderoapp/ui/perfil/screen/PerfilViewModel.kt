@@ -44,13 +44,48 @@ class PerfilViewModel(
             }
             is PerfilAccion.GuardarCambiosPerfil -> guardarCambiosPerfil(accion.nuevoNombre, accion.fotoBytes)
             is PerfilAccion.QuitarVehiculo -> quitarVehiculo(accion.vehiculoId)
+            is PerfilAccion.EliminarCuentaConfirmado -> eliminarCuenta()
+            is PerfilAccion.MensajeMostrado -> _uiState.update { it.copy(mensajeAccion = null) }
+        }
+    }
+    private fun eliminarCuenta() {
+        viewModelScope.launch {
+            val usuario = auth.currentUser ?: return@launch
+
+            // 1. ¿El login es reciente? (menos de 5 minutos = 5 * 60 * 1000 ms)
+            val ultimoLogin = usuario.metadata?.lastSignInTimestamp ?: 0L
+            val esReciente = System.currentTimeMillis() - ultimoLogin <  5 * 60 * 1000
+            if (!esReciente) {
+                _uiState.update {
+                    it.copy(mensajeAccion = "Por seguridad, vuelve a iniciar sesión para eliminar tu cuenta")
+                }
+                return@launch
+            }
+
+            // 2. Supabase primero (aquí llegan las reglas: reserva activa, etc.)
+            usuarioRepository.eliminarCuenta()
+                .onSuccess {
+                    // 3. Ahora Firebase
+                    try {
+                        usuario.delete().await()
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        Log.e("Perfil", "No se pudo borrar la cuenta de Firebase", e)
+                    }
+                    // 4. Cerrar sesión local
+                    auth.signOut()
+                }
+                .onFailure { e ->
+                    _uiState.update {
+                        it.copy(mensajeAccion = e.message ?: "No se pudo eliminar la cuenta")
+                    }
+                }
         }
     }
     private fun guardarCambiosPerfil(nuevoNombre: String, fotoBytes: ByteArray?){
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMensaje = null) }
-
-            var huboError = false
 
             // 1. Actualizamos Firebase Auth
             try {
@@ -73,17 +108,11 @@ class PerfilViewModel(
                 val resultadoFoto = usuarioRepository.actualizarFotoPerfil(fotoBytes)
                 if (resultadoFoto.isFailure) falloFoto = true
             }
-
-            if (huboError) {
+            cargarDatos()
+            if (resultadoNombre.isFailure || falloFoto) {
                 _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMensaje = "Hubo un problema al guardar algunos cambios. Intenta de nuevo."
-                    )
+                    it.copy(mensajeAccion = "Hubo un problema al guardar algunos cambios. Intenta de nuevo.")
                 }
-                cargarDatos()
-            } else {
-                cargarDatos()
             }
         }
     }
@@ -132,7 +161,7 @@ class PerfilViewModel(
                 // Mapeamos de VehiculoEntity (Data) a VehiculoUiModel (UI)
                 val listaUiModels = listaEntidades.map { entity ->
                     VehiculoUiModel(
-                        id = entity.id.toString(),
+                        id = entity.id,
                         placa = entity.placa,
                         tipo = entity.tipo
                     )

@@ -14,23 +14,24 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import androidx.lifecycle.viewmodel.compose.viewModel
 import co.parktulua.core.designsystem.FondoApp
 import co.parktulua.core.designsystem.PrimarioOscuro
 import com.univalle.parqueaderoapp.ui.perfil.screen.componet.DialogoQuitarVehiculo
@@ -47,9 +48,18 @@ fun PerfilScreen(
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         onAccion(PerfilAccion.RecargarDatos)
     }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(estado.mensajeAccion) {
+        estado.mensajeAccion?.let {
+            snackbarHostState.showSnackbar(it)
+            onAccion(PerfilAccion.MensajeMostrado)
+        }
+    }
 
     val scrollState = rememberScrollState()
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = FondoApp,
         topBar = {
             TopAppBar(
