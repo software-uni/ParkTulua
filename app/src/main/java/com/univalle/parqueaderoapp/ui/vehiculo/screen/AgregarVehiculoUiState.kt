@@ -5,7 +5,9 @@ data class AgregarVehiculoUiState (
     val placa: String = "",
     val isLoading: Boolean = false,
     val errorMensaje: String? = null,
-    val registroExitoso: Boolean = false
+    val registroExitoso: Boolean = false,
+    val placaValida: Boolean = false,
+    val errorFormatoPlaca: String? = null
 ){
     //se muestra el campo de la placa
     val mostrarPlaca: Boolean
@@ -13,5 +15,6 @@ data class AgregarVehiculoUiState (
 
     // ¿se puede pulsar "Guardar"?
     val puedeGuardar: Boolean
-        get() = tipo != null && !isLoading && (!tipo.requierePlaca || placa.isNotBlank())
+      //  get() = tipo != null && !isLoading && (!tipo.requierePlaca || placa.isNotBlank())
+      get() = tipo != null && !isLoading && (!tipo.requierePlaca || placaValida)
 }

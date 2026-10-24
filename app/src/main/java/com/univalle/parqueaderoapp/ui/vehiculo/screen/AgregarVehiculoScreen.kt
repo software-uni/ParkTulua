@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.parktulua.core.designsystem.Acento
 import co.parktulua.core.designsystem.AcentoClaro
+import co.parktulua.core.designsystem.Disponible
 import co.parktulua.core.designsystem.FondoApp
 import co.parktulua.core.designsystem.LlenoTexto
 import co.parktulua.core.designsystem.Neutro600
@@ -124,8 +125,17 @@ fun AgregarVehiculoScreen(
                 PlacaInputBoxes(
                     value = uiState.placa,
                     onValueChange = { viewModel.onPlacaChange(it) },
-                    length = 6
+                    length = 6,
+                    esValida = uiState.placaValida
                 )
+                if (uiState.errorFormatoPlaca != null && uiState.placa.isNotEmpty()) {
+                    Text(
+                        text = uiState.errorFormatoPlaca!!,
+                        color = if (uiState.placaValida)  Disponible else Color.Red,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+                    )
+                }
 
             } else {
                 Text(
