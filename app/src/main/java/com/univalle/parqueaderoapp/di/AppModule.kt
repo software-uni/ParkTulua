@@ -11,6 +11,7 @@ import com.univalle.parqueaderoapp.data.vehiculos.SupabaseVehiculoRepository
 import com.univalle.parqueaderoapp.data.vehiculos.VehiculoRepository
 import com.univalle.parqueaderoapp.ui.auth.screen.AuthViewModel
 import com.univalle.parqueaderoapp.ui.perfil.screen.PerfilViewModel
+import com.univalle.parqueaderoapp.ui.vehiculo.screen.AgregarVehiculoViewModel
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -44,4 +45,5 @@ val appModule = module {
     // --- ViewModels ---
     viewModel { AuthViewModel(get(), get(), get()) }
     viewModel { PerfilViewModel(get(), get(), get()) }
+    viewModel { AgregarVehiculoViewModel(get()) }
 }

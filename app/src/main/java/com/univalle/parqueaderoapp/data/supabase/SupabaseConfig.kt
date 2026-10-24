@@ -9,4 +9,9 @@ object SupabaseConfig {
     // Rutas de las Edge Functions
     val URL_REGISTRAR_USUARIO: String = "$URL/functions/v1/registrar-usuario"
     val URL_ACTUALIZAR_FOTO: String = "$URL/functions/v1/actualizar-foto"
+
+    // Funciones de base de datos (RPC)
+    //Vehiculo
+    val URL_REGISTRAR_VEHICULO: String = "$REST_URL/rpc/registrar_vehiculo"
+    val URL_QUITAR_VEHICULO: String = "$REST_URL/rpc/quitar_vehiculo"
 }

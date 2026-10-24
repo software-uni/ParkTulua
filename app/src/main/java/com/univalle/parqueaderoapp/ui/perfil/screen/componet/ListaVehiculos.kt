@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DirectionsBike
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.TwoWheeler
 import androidx.compose.material3.Button
@@ -52,8 +53,10 @@ fun ListaVehiculos(
     vehiculos: List<VehiculoUiModel>,
     cantidad: Int,
     mostrarEstadoVacio: Boolean,
-    onAgregarVehiculoClick: () -> Unit
+    onAgregarVehiculoClick: () -> Unit,
+    onEliminarVehiculoClick: (VehiculoUiModel) -> Unit
 ) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -93,7 +96,9 @@ fun ListaVehiculos(
             // Dibuja cada vehículo en la lista
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 vehiculos.forEach { vehiculo ->
-                    TarjetaVehiculo(vehiculo = vehiculo)
+                    TarjetaVehiculo(
+                        vehiculo = vehiculo,
+                        onEliminarClick ={onEliminarVehiculoClick(vehiculo)})
                 }
             }
             Spacer(modifier = Modifier.height(24.dp))
@@ -120,7 +125,10 @@ fun ListaVehiculos(
 }
 
 @Composable
-private fun TarjetaVehiculo(vehiculo: VehiculoUiModel) {
+private fun TarjetaVehiculo(
+    vehiculo: VehiculoUiModel,
+    onEliminarClick: () -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -134,10 +142,10 @@ private fun TarjetaVehiculo(vehiculo: VehiculoUiModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Si en el texto dice "Moto", pone el icono de moto, si no, el de carro
-            val icono = if (vehiculo.tipo.contains("Moto", ignoreCase = true)) {
-                Icons.Default.TwoWheeler
-            } else {
-                Icons.Default.DirectionsCar
+            val icono = when {
+                vehiculo.tipo.contains("Moto", ignoreCase = true) -> Icons.Default.TwoWheeler
+                vehiculo.tipo.contains("Bici", ignoreCase = true) -> Icons.Default.DirectionsBike
+                else -> Icons.Default.DirectionsCar
             }
 
             Box(
@@ -158,19 +166,23 @@ private fun TarjetaVehiculo(vehiculo: VehiculoUiModel) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                Text(
-                    text = vehiculo.placa.uppercase(),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = Neutro900
-                )
+                vehiculo.placa?.let { placa ->
+                    Text(
+                        text = vehiculo.placa.uppercase(),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Neutro900
+                    )
+                }
                 Text(
                     text = vehiculo.tipo,
                     fontSize = 14.sp,
                     color = Neutro600
                 )
             }
-            IconButton(onClick = { /* TODO: Implementar lógica para quitar vehículo */ }) {
+            IconButton(
+                onClick = onEliminarClick
+            ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Quitar vehículo",
@@ -183,7 +195,9 @@ private fun TarjetaVehiculo(vehiculo: VehiculoUiModel) {
 
 
 @Composable
-private fun EstadoVacioVehiculos(onAgregarVehiculoClick: () -> Unit) {
+private fun EstadoVacioVehiculos(
+    onAgregarVehiculoClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()

@@ -43,6 +43,7 @@ class PerfilViewModel(
                 // Lógica para agregar vehículo
             }
             is PerfilAccion.GuardarCambiosPerfil -> guardarCambiosPerfil(accion.nuevoNombre, accion.fotoBytes)
+            is PerfilAccion.QuitarVehiculo -> quitarVehiculo(accion.vehiculoId)
         }
     }
     private fun guardarCambiosPerfil(nuevoNombre: String, fotoBytes: ByteArray?){
@@ -84,6 +85,17 @@ class PerfilViewModel(
             } else {
                 cargarDatos()
             }
+        }
+    }
+    private fun quitarVehiculo(vehiculoId: String) {
+        viewModelScope.launch {
+            vehiculoRepository.suspenderVehiculo(vehiculoId)
+                .onSuccess { cargarDatos() }
+                .onFailure { e ->
+                    _uiState.update {
+                        it.copy(mensajeAccion = e.message ?: "No se pudo quitar el vehículo")
+                    }
+                }
         }
     }
     private fun cargarDatos() {

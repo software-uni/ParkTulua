@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class VehiculoEntity(
     val id: String,
-    val placa: String,
+    val placa: String?,
     val tipo: String
 )
 

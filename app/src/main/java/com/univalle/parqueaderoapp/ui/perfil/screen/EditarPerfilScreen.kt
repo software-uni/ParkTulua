@@ -54,7 +54,7 @@ fun EditarPerfilScreen(
     correoActual: String,
     fotoUrlActual: String?,
     onGuardarClick: (String, Uri?) -> Unit,
-    onEliminarCuentaClick: () -> Unit,
+  //      onEliminarCuentaClick: () -> Unit,
     onVolverClick: () -> Unit
 ) {
     // Lógica simple para dividir el nombre actual en Nombres y Apellidos

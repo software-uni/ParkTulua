@@ -1,7 +1,9 @@
 package com.univalle.parqueaderoapp.ui.navigation
 
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -19,6 +21,7 @@ import com.univalle.parqueaderoapp.ui.perfil.screen.EditarPerfilScreen
 import com.univalle.parqueaderoapp.ui.perfil.screen.PerfilAccion
 import com.univalle.parqueaderoapp.ui.perfil.screen.PerfilScreen
 import com.univalle.parqueaderoapp.ui.perfil.screen.PerfilViewModel
+import com.univalle.parqueaderoapp.ui.vehiculo.screen.AgregarVehiculoScreen
 import org.koin.androidx.compose.koinViewModel
 
 object AppScreens {
@@ -27,6 +30,7 @@ object AppScreens {
     const val VERIFICACION_SCREEN = "verificacion_screen"
     const val PERFIL_SCREEN = "perfil_screen"
     const val EDITAR_PERFIL_SCREEN = "editar_perfil_screen"
+    const val AGREGAR_VEHICULO_SCREEN = "agregar_vehiculo_screen"
 }
 
 @Composable
@@ -121,6 +125,9 @@ fun AppNavGraph(authViewModel: AuthViewModel = koinViewModel()) {
                         is PerfilAccion.EditarPerfilClick -> {
                             navController.navigate(AppScreens.EDITAR_PERFIL_SCREEN)
                         }
+                        is PerfilAccion.AgregarVehiculoClick ->{
+                            navController.navigate(AppScreens.AGREGAR_VEHICULO_SCREEN)
+                        }
                         else -> {}
                     }
                 }
@@ -143,6 +150,30 @@ fun AppNavGraph(authViewModel: AuthViewModel = koinViewModel()) {
                         contexto.contentResolver.openInputStream(uri)?.use { it.readBytes() }
                     }
                     perfilViewModel.onAccion(PerfilAccion.GuardarCambiosPerfil(nuevoNombre, fotoBytes))
+                    navController.popBackStack()
+                },
+                onVolverClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(
+            route = AppScreens.AGREGAR_VEHICULO_SCREEN,
+            enterTransition = {
+                slideInVertically(initialOffsetY = { it })
+            },
+            exitTransition = {
+                slideOutVertically(targetOffsetY = { it })
+            },
+            popEnterTransition = {
+                slideInVertically(initialOffsetY = { -it })
+            },
+            popExitTransition = {
+                slideOutVertically(targetOffsetY = { it })
+            }
+        ) {
+            AgregarVehiculoScreen(
+                onRegistroExitoso = {
                     navController.popBackStack()
                 },
                 onVolverClick = {
