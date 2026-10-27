@@ -2,14 +2,19 @@ package com.univalle.parqueaderoapp.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.univalle.parqueaderoapp.ui.auth.screen.AuthViewModel
 import com.univalle.parqueaderoapp.ui.auth.screen.RegistroScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.univalle.parqueaderoapp.data.ubicacion.PlayServicesUbicacionRepository
 import com.univalle.parqueaderoapp.ui.auth.screen.LoginScreen
 import com.univalle.parqueaderoapp.ui.auth.screen.VerificacionScreen
 import com.univalle.parqueaderoapp.ui.mapa.MapaScreen
+import com.univalle.parqueaderoapp.ui.mapa.MapaViewModel
+import com.univalle.parqueaderoapp.ui.mapa.MapaViewModelFactory
 
 
 object AppScreens{
@@ -81,7 +86,11 @@ fun AppNavGraph(authViewModel: AuthViewModel){
         }
 
         composable(AppScreens.MAPA_SCREEN) {
-            MapaScreen()
+            val context = LocalContext.current.applicationContext
+            val mapaViewModel: MapaViewModel = viewModel(
+                factory = MapaViewModelFactory(PlayServicesUbicacionRepository(context))
+            )
+            MapaScreen(viewModel = mapaViewModel)
         }
     }
 
