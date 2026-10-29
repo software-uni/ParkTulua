@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,6 +27,11 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import co.parktulua.core.designsystem.Disponible
+import co.parktulua.core.designsystem.Neutro0
+import co.parktulua.core.designsystem.Neutro600
+import co.parktulua.core.designsystem.Primario
+import co.parktulua.core.designsystem.PrimarioClaro
 import com.univalle.parqueaderoapp.R
 import com.univalle.parqueaderoapp.ui.navigation.PestanaNavegacion
 
@@ -42,7 +46,7 @@ fun BarraNavegacion(
         modifier = modifier
             .fillMaxWidth()
             .shadow(8.dp)
-            .background(MaterialTheme.colorScheme.surface)
+            .background(Neutro0)
             .navigationBarsPadding()
             .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 12.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
@@ -67,8 +71,7 @@ private fun Pestana(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val color = if (activa) MaterialTheme.colorScheme.primary
-    else MaterialTheme.colorScheme.onSurfaceVariant
+    val color = if (activa) Primario else Neutro600
 
     Column(
         modifier = modifier
@@ -80,8 +83,7 @@ private fun Pestana(
             modifier = Modifier
                 .size(width = 56.dp, height = 32.dp)
                 .background(
-                    if (activa) MaterialTheme.colorScheme.primaryContainer
-                    else Color.Transparent,
+                    if (activa) PrimarioClaro else Color.Transparent,
                     CircleShape
                 ),
             contentAlignment = Alignment.Center
@@ -98,7 +100,7 @@ private fun Pestana(
                         .align(Alignment.TopEnd)
                         .padding(top = 2.dp, end = 10.dp)
                         .size(8.dp)
-                        .background(Color(0xFF2E9E5B), CircleShape)
+                        .background(Disponible, CircleShape)
                 )
             }
         }
