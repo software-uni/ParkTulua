@@ -1,14 +1,16 @@
 package com.univalle.parqueaderoapp.ui.navigation
 
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,13 +26,9 @@ import com.univalle.parqueaderoapp.ui.perfil.screen.PerfilAccion
 import com.univalle.parqueaderoapp.ui.perfil.screen.PerfilScreen
 import com.univalle.parqueaderoapp.ui.perfil.screen.PerfilViewModel
 import com.univalle.parqueaderoapp.ui.shared.navegacion.BarraNavegacion
-import com.univalle.parqueaderoapp.ui.shared.navegacion.PestanaNavegacion
 import com.univalle.parqueaderoapp.ui.shared.screens.PantallaProvisional
-import org.koin.androidx.compose.koinViewModel
-
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import com.univalle.parqueaderoapp.ui.vehiculo.screen.AgregarVehiculoScreen
+import org.koin.androidx.compose.koinViewModel
 
 object AppScreens {
     const val LOGIN_SCREEN = "login_screen"
@@ -100,15 +98,9 @@ fun AppNavGraph(authViewModel: AuthViewModel = koinViewModel()) {
             composable(AppScreens.LOGIN_SCREEN) {
                 LoginScreen(
                     viewModel = authViewModel,
-                    onIniciarSesionClick = {
-                        authViewModel.login()
-                    },
-                    onCrearCuenta = {
-                        navController.navigate(AppScreens.REGISTRO_SCREEN)
-                    },
-                    onIniciarInvitado = {
-                        authViewModel.loginInivitado()
-                    }
+                    onIniciarSesionClick = { authViewModel.login() },
+                    onCrearCuenta = { navController.navigate(AppScreens.REGISTRO_SCREEN) },
+                    onIniciarInvitado = { authViewModel.loginInivitado() }
                 )
             }
 
@@ -148,7 +140,8 @@ fun AppNavGraph(authViewModel: AuthViewModel = koinViewModel()) {
                 popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
                 popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
             ) { backStackEntry ->
-                val perfilViewModel: PerfilViewModel = koinViewModel(viewModelStoreOwner = backStackEntry)
+                val perfilViewModel: PerfilViewModel =
+                    koinViewModel(viewModelStoreOwner = backStackEntry)
                 val estado by perfilViewModel.uiState.collectAsState()
 
                 PerfilScreen(
@@ -162,12 +155,15 @@ fun AppNavGraph(authViewModel: AuthViewModel = koinViewModel()) {
                                     popUpTo(AppScreens.PERFIL_SCREEN) { inclusive = true }
                                 }
                             }
+
                             is PerfilAccion.EditarPerfilClick -> {
                                 navController.navigate(AppScreens.EDITAR_PERFIL_SCREEN)
                             }
+
                             is PerfilAccion.AgregarVehiculoClick -> {
                                 navController.navigate(AppScreens.AGREGAR_VEHICULO_SCREEN)
                             }
+
                             else -> {}
                         }
                     }
@@ -180,7 +176,8 @@ fun AppNavGraph(authViewModel: AuthViewModel = koinViewModel()) {
                     navController.getBackStackEntry(AppScreens.PERFIL_SCREEN)
                 }
 
-                val perfilViewModel: PerfilViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
+                val perfilViewModel: PerfilViewModel =
+                    koinViewModel(viewModelStoreOwner = parentEntry)
                 val estado by perfilViewModel.uiState.collectAsState()
 
                 EditarPerfilScreen(
@@ -191,12 +188,22 @@ fun AppNavGraph(authViewModel: AuthViewModel = koinViewModel()) {
                         val fotoBytes = nuevaFotoUri?.let { uri ->
                             contexto.contentResolver.openInputStream(uri)?.use { it.readBytes() }
                         }
-                        perfilViewModel.onAccion(PerfilAccion.GuardarCambiosPerfil(nuevoNombre, fotoBytes))
+                        perfilViewModel.onAccion(
+                            PerfilAccion.GuardarCambiosPerfil(
+                                nuevoNombre,
+                                fotoBytes
+                            )
+                        )
                         navController.popBackStack()
                     },
-                    onVolverClick = {
-                        navController.popBackStack()
-                    }
+                    mensajeAccion = estado.mensajeAccion,
+                    onMensajeMostrado = {
+                        perfilViewModel.onAccion(PerfilAccion.MensajeMostrado)
+                    },
+                    onEliminarCuentaConfirmado = {
+                        perfilViewModel.onAccion(PerfilAccion.EliminarCuentaConfirmado)
+                    },
+                    onVolverClick = { navController.popBackStack() }
                 )
             }
 
@@ -209,12 +216,8 @@ fun AppNavGraph(authViewModel: AuthViewModel = koinViewModel()) {
                 popExitTransition = { slideOutVertically(targetOffsetY = { it }) }
             ) {
                 AgregarVehiculoScreen(
-                    onRegistroExitoso = {
-                        navController.popBackStack()
-                    },
-                    onVolverClick = {
-                        navController.popBackStack()
-                    }
+                    onRegistroExitoso = { navController.popBackStack() },
+                    onVolverClick = { navController.popBackStack() }
                 )
             }
         }
