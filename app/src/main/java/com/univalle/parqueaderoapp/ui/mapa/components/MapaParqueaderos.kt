@@ -42,7 +42,7 @@ fun MapaParqueaderos(
                     ),
                     zoom = MapaConfig.ZOOM_UBICACION_USUARIO
                 ),
-                animation = CameraAnimation.Fly { duration = 3.seconds },
+                animation = CameraAnimation.Fly { duration = 1.seconds },
             )
         }
     }
