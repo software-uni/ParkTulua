@@ -2,9 +2,9 @@ package com.univalle.parqueaderoapp.ui.mapa
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.univalle.parqueaderoapp.data.mapa.MapaUiState
-import com.univalle.parqueaderoapp.data.ubicacion.PermisoUbicacion
-import com.univalle.parqueaderoapp.data.ubicacion.UbicacionRepository
+import com.univalle.parqueaderoapp.feature.mapa.MapaUiState
+import com.univalle.parqueaderoapp.domain.model.PermisoUbicacion
+import com.univalle.parqueaderoapp.domain.repository.UbicacionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -1,7 +1,7 @@
 package com.univalle.parqueaderoapp.domain.usecase
 
 import com.univalle.parqueaderoapp.core.util.GeoUtils
-import com.univalle.parqueaderoapp.data.ubicacion.Coordenada
+import com.univalle.parqueaderoapp.domain.model.Coordenada
 import com.univalle.parqueaderoapp.domain.model.FiltroMapa
 import com.univalle.parqueaderoapp.domain.model.ParqueaderoCercano
 import com.univalle.parqueaderoapp.domain.model.ParqueaderoMapa

@@ -1,4 +1,4 @@
-package com.univalle.parqueaderoapp.data.ubicacion
+package com.univalle.parqueaderoapp.data.repository
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,6 +7,8 @@ import androidx.core.location.LocationManagerCompat
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.univalle.parqueaderoapp.domain.model.Coordenada
+import com.univalle.parqueaderoapp.domain.repository.UbicacionRepository
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 

@@ -9,7 +9,7 @@ import com.univalle.parqueaderoapp.ui.auth.screen.AuthViewModel
 import com.univalle.parqueaderoapp.ui.auth.screen.RegistroScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.univalle.parqueaderoapp.data.ubicacion.PlayServicesUbicacionRepository
+import com.univalle.parqueaderoapp.data.repository.PlayServicesUbicacionRepository
 import com.univalle.parqueaderoapp.ui.auth.screen.LoginScreen
 import com.univalle.parqueaderoapp.ui.auth.screen.VerificacionScreen
 import com.univalle.parqueaderoapp.ui.mapa.MapaScreen

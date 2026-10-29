@@ -1,4 +1,6 @@
-package com.univalle.parqueaderoapp.data.ubicacion
+package com.univalle.parqueaderoapp.domain.repository
+
+import com.univalle.parqueaderoapp.domain.model.Coordenada
 
 interface UbicacionRepository {
     fun gpsActivo(): Boolean

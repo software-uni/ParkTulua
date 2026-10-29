@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.univalle.parqueaderoapp.core.maps.MapaConfig
-import com.univalle.parqueaderoapp.data.ubicacion.Coordenada
+import com.univalle.parqueaderoapp.domain.model.Coordenada
 import org.maplibre.compose.camera.CameraAnimation
 
 import org.maplibre.compose.camera.CameraPosition

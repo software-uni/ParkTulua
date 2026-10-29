@@ -1,3 +1,3 @@
-package com.univalle.parqueaderoapp.data.ubicacion
+package com.univalle.parqueaderoapp.domain.model
 
 enum class PermisoUbicacion { PENDIENTE, CONCEDIDO, DENEGADO }

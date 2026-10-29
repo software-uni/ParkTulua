@@ -1,7 +1,7 @@
-package com.univalle.parqueaderoapp.data.mapa
+package com.univalle.parqueaderoapp.feature.mapa
 
-import com.univalle.parqueaderoapp.data.ubicacion.Coordenada
-import com.univalle.parqueaderoapp.data.ubicacion.PermisoUbicacion
+import com.univalle.parqueaderoapp.domain.model.Coordenada
+import com.univalle.parqueaderoapp.domain.model.PermisoUbicacion
 
 data class MapaUiState(
 

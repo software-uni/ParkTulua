@@ -1,6 +1,6 @@
 package com.univalle.parqueaderoapp.core.util
 
-import com.univalle.parqueaderoapp.data.ubicacion.Coordenada
+import com.univalle.parqueaderoapp.domain.model.Coordenada
 import kotlin.math.asin
 import kotlin.math.cos
 import kotlin.math.sin
