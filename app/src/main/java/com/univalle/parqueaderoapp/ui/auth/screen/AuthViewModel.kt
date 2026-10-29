@@ -54,6 +54,7 @@ class AuthViewModel(
         private set
     var correoVerificado by mutableStateOf(false)
         private set
+    var sesionIniciada by mutableStateOf(false)
     var introVista by mutableStateOf(false)
         private set
     fun marcarIntroVista() {
@@ -78,6 +79,9 @@ class AuthViewModel(
 
     fun limpiarRequiereVerificacion() {
         requiereVerificacion = false
+    }
+    fun limpiarSesionIniciada() {
+        sesionIniciada = false
     }
 
     fun onNombreChange(nuevoNombre: String) {
@@ -230,6 +234,7 @@ class AuthViewModel(
                         if (verificado) {
                             sincronizarConSupabase()
                             mensajeExito = "¡Éxito! Sesión iniciada."
+                            sesionIniciada = true
                         } else {
                             requiereVerificacion = true
                         }
@@ -246,6 +251,7 @@ class AuthViewModel(
                 // ¡Éxito! Aquí navegaremos a la pantalla del mapa después
                 sincronizarConSupabase()
                 mensajeExito = "¡Éxito! Entraste con Google."
+                sesionIniciada = true
             }.onFailure { excepcion ->
                 errorMensaje = excepcion.localizedMessage ?: "Error con Google"
             }
@@ -258,7 +264,8 @@ class AuthViewModel(
             errorMensaje = null
             val resultado = repository.iniciarSesionInvitado()
             resultado.onSuccess {
-                mensajeExito = "Exitor Entraste como invitado"
+                mensajeExito = "Exito Entraste como invitado"
+                sesionIniciada = true
             }.onFailure { exception ->
                 errorMensaje = exception.localizedMessage ?: "Error al entrar como invitado "
             }
