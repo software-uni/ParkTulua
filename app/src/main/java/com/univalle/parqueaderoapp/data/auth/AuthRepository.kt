@@ -11,5 +11,6 @@ interface AuthRepository {
     suspend fun reenviarVerificacion(): Result<Unit>
     suspend fun verificarCorreo(): Result<Boolean>
     fun uidActual(): String?
+    suspend fun obtenerToken(): String?
     fun cerrarSesion()
 }

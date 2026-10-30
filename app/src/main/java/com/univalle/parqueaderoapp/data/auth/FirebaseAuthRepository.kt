@@ -50,7 +50,7 @@ class FirebaseAuthRepository(
                 .build()
             authResult.user?.updateProfile(profileUpdates)?.await()
             authResult.user?.sendEmailVerification()?.await()
-            authResult.user?.getIdToken(true)?.await()
+            //authResult.user?.getIdToken(true)?.await()
             Result.success(true)
         } catch (e : CancellationException){
             throw e
@@ -94,6 +94,18 @@ class FirebaseAuthRepository(
             Result.failure(e)
         }
     }
+
+    override suspend fun obtenerToken(): String? {
+        val usuario = auth.currentUser ?: return null
+        return try {
+            // Pasamos 'false' para usar caché si el token aún no expira, ahorrando red.
+            val result = usuario.getIdToken(false).await()
+            result.token
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     override fun uidActual(): String? = auth.currentUser?.uid
     override fun cerrarSesion() {
         auth.signOut()
