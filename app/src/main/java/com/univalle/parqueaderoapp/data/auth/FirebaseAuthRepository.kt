@@ -10,10 +10,12 @@ class FirebaseAuthRepository(
     private val auth: FirebaseAuth
 ) : AuthRepository{
     override suspend fun iniciarSesion(email: String, contraseña: String): Result<Boolean> {
-        return  try {
+        return try {
             auth.signInWithEmailAndPassword(email, contraseña).await()
             Result.success(true)
-        } catch (e: Exception){
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
@@ -23,7 +25,9 @@ class FirebaseAuthRepository(
             val credential = GoogleAuthProvider.getCredential(idToken, null)
             auth.signInWithCredential(credential).await()
             Result.success(true)
-        } catch (e: Exception){
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
@@ -63,6 +67,8 @@ class FirebaseAuthRepository(
         return try {
             auth.sendPasswordResetEmail(email).await()
             Result.success(Unit)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Result.failure(e)
         }

@@ -38,6 +38,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val supabaseUrl = localProperties.getProperty("SUPABASE_URL") ?:""
+        val supabaseAnonKey = localProperties.getProperty("SUPABASE_ANON_KEY") ?: ""
+
+        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"$supabaseAnonKey\"")
     }
 
     buildTypes {
@@ -56,12 +62,14 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.animation)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
@@ -91,12 +99,25 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation(libs.okhttp)
 
-// Para el botón "Continuار con Google"
+    // --- Dependencias fusionadas (HEAD + main) ---
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("io.coil-kt:coil-compose:2.6.0") // Mantenemos la versión más reciente de tu rama
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:2.6.1")
+    implementation("io.ktor:ktor-client-android:2.3.12")
+
+    // Para el botón "Continuar con Google"
     implementation("androidx.credentials:credentials:1.3.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+    // Utilidades extra de ambas ramas
+    implementation("com.google.code.gson:gson:2.10.1")
     // Seguridad: Almacenamiento local cifrado
     implementation("androidx.security:security-crypto:1.1.0")
+
+    // Koin para Inyección de Dependencias en Jetpack Compose
+    implementation("io.insert-koin:koin-androidx-compose:3.5.6")
 
     // Libreria principal MapLibre Compose
     implementation(libs.maplibre.compose)

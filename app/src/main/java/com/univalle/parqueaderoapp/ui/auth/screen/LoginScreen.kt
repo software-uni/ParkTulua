@@ -89,6 +89,7 @@ fun LoginScreen(
         viewModel.mensajeExito?.let { exito ->
             Toast.makeText(context, exito, Toast.LENGTH_LONG).show()
             viewModel.limpiarExito() // Limpiamos para que no se repita al rotar
+            onIniciarSesionClick()
         }
     }
 
