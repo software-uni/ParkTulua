@@ -38,6 +38,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val supabaseUrl = localProperties.getProperty("SUPABASE_URL") ?:""
+        val supabaseAnonKey = localProperties.getProperty("SUPABASE_ANON_KEY") ?: ""
+
+        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"$supabaseAnonKey\"")
     }
 
     buildTypes {
@@ -56,6 +62,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -76,22 +83,31 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation("androidx.compose.material:material-icons-extended")
+
     // Firebase: la BoM mantiene todas las versiones compatibles entre sí
     implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.airbnb.android:lottie-compose:6.5.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // --- Dependencias fusionadas (HEAD + main) ---
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("io.coil-kt:coil-compose:2.6.0") // Mantenemos la versión más reciente de tu rama
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("io.github.jan-tennert.supabase:postgrest-kt:2.6.1")
     implementation("io.ktor:ktor-client-android:2.3.12")
-    implementation("io.coil-kt:coil-compose:2.4.0")
-    implementation(libs.okhttp)
 
-// Para el botón "Continuار con Google"
+    // Para el botón "Continuar con Google"
     implementation("androidx.credentials:credentials:1.3.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+    // Utilidades extra de ambas ramas
+    implementation("com.google.code.gson:gson:2.10.1")
     // Seguridad: Almacenamiento local cifrado
     implementation("androidx.security:security-crypto:1.1.0")
+
+    // Koin para Inyección de Dependencias en Jetpack Compose
+    implementation("io.insert-koin:koin-androidx-compose:3.5.6")
 }
