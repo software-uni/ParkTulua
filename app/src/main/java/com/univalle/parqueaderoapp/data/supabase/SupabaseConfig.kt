@@ -16,4 +16,7 @@ object SupabaseConfig {
     //2. Vehiculo
     val URL_REGISTRAR_VEHICULO: String = "$REST_URL/rpc/registrar_vehiculo"
     val URL_QUITAR_VEHICULO: String = "$REST_URL/rpc/quitar_vehiculo"
+
+    // Parqueaderos
+    val URL_PARQUEADEROS_MAPA: String = "$REST_URL/rpc/parqueaderos_mapa"
 }
